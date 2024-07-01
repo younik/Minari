@@ -8,7 +8,6 @@ import warnings
 
 from google.cloud import storage
 from gymnasium import logger
-from packaging.specifiers import SpecifierSet
 from tqdm.auto import tqdm
 
 from minari.dataset.minari_dataset import parse_dataset_id
@@ -226,6 +225,8 @@ def list_remote_datasets(
     Returns:
        Dict[str, Dict[str, str]]: keys the names of the Minari datasets and values the metadata
     """
+    from minari import supported_dataset_versions
+
     client = storage.Client.create_anonymous_client()
     blobs = client.list_blobs(bucket_or_name="minari-datasets")
 
@@ -235,8 +236,9 @@ def list_remote_datasets(
         try:
             if blob.name.endswith(METADATA_FILE_NAME):
                 metadata = json.loads(blob.download_as_bytes(client=None))
-                if compatible_minari_version and __version__ not in SpecifierSet(
-                    metadata["minari_version"]
+                if (
+                    compatible_minari_version
+                    and metadata["minari_version"] not in supported_dataset_versions
                 ):
                     continue
                 dataset_id = metadata["dataset_id"]
