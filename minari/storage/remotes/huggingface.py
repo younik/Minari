@@ -6,7 +6,7 @@ from typing import Any, Iterable, Optional, Tuple
 
 
 try:
-    from huggingface_hub import HfApi
+    from huggingface_hub.hf_api import HfApi, RepoFile
     from huggingface_hub.utils import EntryNotFoundError
 except ImportError:
     raise ImportError(
@@ -44,59 +44,12 @@ class HuggingFaceStorage(CloudStorage):
             repo_type="dataset",
         )
 
-        try:  # if it is a namespace, register dataset_id metadata
-            repo_metadata = self._api.hf_hub_download(
-                repo_id=repo_id,
-                filename=_NAMESPACE_METADATA_FILENAME,
-                repo_type="dataset",
-            )
-
-            with open(repo_metadata) as f:
-                namespace_metadata = json.load(f)
-            registered_datasets = namespace_metadata.get("datasets", [])
-            registered_datasets.append(dataset_id)
-            namespace_metadata["datasets"] = list(set(registered_datasets))
-            with open(repo_metadata, "w") as f:
-                json.dump(namespace_metadata, f)
-
-            self._api.upload_file(
-                path_or_fileobj=repo_metadata,
-                path_in_repo=_NAMESPACE_METADATA_FILENAME,
-                repo_id=repo_id,
-                repo_type="dataset",
-            )
-        except EntryNotFoundError:
-            pass
-
     def upload_namespace(self, namespace: str) -> None:
         local_filepath = get_dataset_path(namespace) / _NAMESPACE_METADATA_FILENAME
         repo_name, path_in_repo = self._decompose_path(namespace)
         repo_id = f"{self.name}/{repo_name}"
 
         self._api.create_repo(repo_id=repo_id, repo_type="dataset", exist_ok=True)
-
-        if path_in_repo != "":
-            repo_metadata_path = self._api.hf_hub_download(
-                repo_id=repo_id,
-                filename=_NAMESPACE_METADATA_FILENAME,
-                repo_type="dataset",
-            )
-
-            with open(repo_metadata_path) as f:
-                repo_metadata = json.load(f)
-            registered_namespaces = repo_metadata.get("namespaces", [])
-            registered_namespaces.append(namespace)
-            repo_metadata["namespaces"] = list(set(registered_namespaces))
-            with open(repo_metadata_path, "w") as f:
-                json.dump(repo_metadata, f)
-
-            self._api.upload_file(
-                path_or_fileobj=repo_metadata_path,
-                path_in_repo=_NAMESPACE_METADATA_FILENAME,
-                repo_id=repo_id,
-                repo_type="dataset",
-            )
-
         self._api.upload_file(
             path_or_fileobj=local_filepath,
             path_in_repo=os.path.join(path_in_repo, _NAMESPACE_METADATA_FILENAME),
@@ -105,39 +58,27 @@ class HuggingFaceStorage(CloudStorage):
         )
 
     def list_datasets(self, prefix: Optional[str] = None) -> Iterable[str]:
+        group_name, in_repo_prefix = None, None
         if prefix is not None:
-            group_name, _ = self._decompose_path(prefix)
-        else:
-            prefix = ""
-            group_name = None
+            group_name, in_repo_prefix = self._decompose_path(prefix)
 
+        metadata_end = f"/data/{METADATA_FILE_NAME}"
         hf_datasets = self._api.list_datasets(author=self.name, dataset_name=group_name)
         for group_info in hf_datasets:
+            repo_name = group_info.id.split("/", 1)[1]
+            tree = self._api.list_repo_tree(
+                group_info.id,
+                path_in_repo=in_repo_prefix,
+                repo_type="dataset",
+                recursive=True,
+            )
             try:
-                repo_metadata = self._api.hf_hub_download(
-                    repo_id=group_info.id,
-                    filename=_NAMESPACE_METADATA_FILENAME,
-                    repo_type="dataset",
-                )
+                for entry in tree:
+                    if isinstance(entry, RepoFile) and entry.path.endswith(metadata_end):
+                        yield f"{repo_name}/{entry.path[:-len(metadata_end)]}"
             except EntryNotFoundError:
-                try:
-                    self._api.hf_hub_download(
-                        repo_id=group_info.id,
-                        filename=f"data/{METADATA_FILE_NAME}",
-                        repo_type="dataset",
-                    )
-                    if group_info.id.startswith(prefix):
-                        yield group_info.id
-                except Exception:
-                    warnings.warn(f"Skipping {group_info.id} as it is malformed.")
-            else:
-                with open(repo_metadata) as f:
-                    namespace_metadata = json.load(f)
-
-                group_datasets = namespace_metadata.get("datasets", [])
-                group_datasets = filter(lambda x: x.startswith(prefix), group_datasets)
-                yield from group_datasets
-
+                yield from []
+    
     def download_dataset(self, dataset_id: Any, path: Path) -> None:
         repo_id, path_in_repo = self._decompose_path(dataset_id)
         self._api.snapshot_download(
@@ -159,21 +100,20 @@ class HuggingFaceStorage(CloudStorage):
         return metadata
 
     def list_namespaces(self) -> Iterable[str]:
+        metadata_end = f"/{_NAMESPACE_METADATA_FILENAME}"
         for hf_dataset in self._api.list_datasets(author=self.name):
+            repo_name = hf_dataset.id.split("/", 1)[1]
+            tree = self._api.list_repo_tree(
+                hf_dataset.id,
+                repo_type="dataset",
+                recursive=True,
+            )
             try:
-                repo_metadata = self._api.hf_hub_download(
-                    repo_id=hf_dataset.id,
-                    filename=_NAMESPACE_METADATA_FILENAME,
-                    repo_type="dataset",
-                )
+                for entry in tree:
+                    if isinstance(entry, RepoFile) and entry.path.endswith(metadata_end):
+                        yield f"{repo_name}/{entry.path[:-len(metadata_end)]}"
             except EntryNotFoundError:
-                continue
-            else:
-                with open(repo_metadata) as f:
-                    namespace_metadata = json.load(f)
-
-                repo_name = hf_dataset.id.split("/", 1)[1]
-                yield from [repo_name] + namespace_metadata.get("namespaces", [])
+                yield from []
 
     def download_namespace_metadata(self, namespace: str, path: Path) -> None:
         repo_id, path_in_repo = self._decompose_path(namespace)
