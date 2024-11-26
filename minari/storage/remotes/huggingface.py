@@ -1,6 +1,5 @@
 import json
 import os
-import warnings
 from pathlib import Path
 from typing import Any, Iterable, Optional, Tuple
 
@@ -74,11 +73,13 @@ class HuggingFaceStorage(CloudStorage):
             )
             try:
                 for entry in tree:
-                    if isinstance(entry, RepoFile) and entry.path.endswith(metadata_end):
+                    if isinstance(entry, RepoFile) and entry.path.endswith(
+                        metadata_end
+                    ):
                         yield f"{repo_name}/{entry.path[:-len(metadata_end)]}"
             except EntryNotFoundError:
                 yield from []
-    
+
     def download_dataset(self, dataset_id: Any, path: Path) -> None:
         repo_id, path_in_repo = self._decompose_path(dataset_id)
         self._api.snapshot_download(
@@ -110,7 +111,9 @@ class HuggingFaceStorage(CloudStorage):
             )
             try:
                 for entry in tree:
-                    if isinstance(entry, RepoFile) and entry.path.endswith(metadata_end):
+                    if isinstance(entry, RepoFile) and entry.path.endswith(
+                        metadata_end
+                    ):
                         yield f"{repo_name}/{entry.path[:-len(metadata_end)]}"
             except EntryNotFoundError:
                 yield from []
