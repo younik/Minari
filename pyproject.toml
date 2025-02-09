@@ -44,7 +44,8 @@ create = ["jax[cpu]"]
 all = ["minari[arrow,hdf5,gcs,hf,create]"]
 
 testing = [
-    "pytest>=7.1.3",
+    "pytest",
+    "pytest-benchmark",
     "gymnasium-robotics>=1.2.3",
     "mktestdocs",
 ]
@@ -118,4 +119,4 @@ reportUnboundVariable = "warning"
 [tool.pytest.ini_options]
 filterwarnings = ['ignore:.*`eval_env` is set to None']
 # filterwarnings = ['ignore:.*step API.*:DeprecationWarning']
-addopts = ["--ignore=docs/tutorials"]
+addopts = ["--ignore=docs/tutorials", "--benchmark-skip"]
