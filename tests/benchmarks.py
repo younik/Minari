@@ -1,12 +1,34 @@
+import platform
 import shutil
+import tempfile
+
 import numpy as np
-import pytest
 from gymnasium import spaces
 from minari.dataset.step_data import StepData
 
 from minari.data_collector.episode_buffer import EpisodeBuffer
 from minari.dataset.minari_storage import MinariStorage
+import timeit
+import matplotlib.pyplot as plt
 
+
+DATASET_SIZE = [512, 2048, 8192]
+BATCH_SIZE = [8, 64, 512]
+DATA_FORMATS = ["hdf5", "arrow"]
+TEST_SPACES = {
+    "box": spaces.Box(-1, 1, shape=(32,)),
+    "discrete": spaces.Discrete(2048),
+    # "text": spaces.Text(max_length=100),
+    # "image": spaces.Box(0, 255, shape=(128, 128, 3), dtype=np.uint8),
+    # "dict": spaces.Dict({
+    #     "image": spaces.Box(-1, 1, shape=(10,)),
+    #     "discrete": spaces.Discrete(10),
+    # }),
+    # "tuple": spaces.Tuple([
+    #     spaces.Box(-1, 1, shape=(10,)),
+    #     spaces.Discrete(10),
+    # ]),
+}
 
 def _generate_episode_buffer(observation_space: spaces.Space, action_space: spaces.Space, length=25):
     buffer = EpisodeBuffer(observations=observation_space.sample())
@@ -33,86 +55,79 @@ def _generate_episode_buffer(observation_space: spaces.Space, action_space: spac
     
     return buffer
 
-
-@pytest.fixture(params=[
-    spaces.Box(-1, 1, shape=(4,)),  # Small observation space
-    spaces.Box(-1, 1, shape=(84, 84, 3)),  # Image observation space
-    # spaces.Box(-1, 1, shape=(512,)),  # Large observation space
-])
-def observation_space(request):
-    return request.param
-
-
-@pytest.fixture(params=["hdf5", "arrow"])
-def data_format(request):
-    return request.param
-
-
-@pytest.fixture
-def action_space():
-    return spaces.Box(-1, 1, shape=(1,))
-
-
-@pytest.fixture
-def base_storage_path(tmp_path):
-    return str(tmp_path / "minari-benchmark")
-
-
-@pytest.mark.benchmark
-@pytest.mark.parametrize("n_episodes", [10, 100, 1000])
-@pytest.mark.parametrize("buffer_length", [32, 256, 1024])
-def test_storage_write(benchmark, observation_space, action_space, data_format, base_storage_path, n_episodes, buffer_length):
-    def generate_and_write():
-        storage = MinariStorage.new(
-            data_path=f"{base_storage_path}-{n_episodes}-{buffer_length}",
-            observation_space=observation_space,
-            action_space=action_space,
-            data_format=data_format,
+def time_storage(space, dataset_size, batch_sizes, data_format):
+    action_space = spaces.Box(-1, 1, shape=(1,))
+    observation_space = space
+    episodes = [
+        _generate_episode_buffer(
+            observation_space, action_space, length=512
         )
-        episodes = [
-            _generate_episode_buffer(
-                observation_space, action_space, length=buffer_length
-            )
-            for _ in range(n_episodes)
-        ]
-        storage.update_episodes(episodes)
-        shutil.rmtree(storage.data_path)
-    
-    benchmark.pedantic(
-        generate_and_write,
-        rounds=3,
-        iterations=1,
-    )
+        for _ in range(dataset_size)
+    ]
 
-
-@pytest.mark.benchmark
-@pytest.mark.parametrize("n_episodes", [100, 1000])
-@pytest.mark.parametrize("buffer_length", [256, 2048])
-def test_storage_read(benchmark, observation_space, action_space, data_format, base_storage_path, n_episodes, buffer_length):
-    # Setup: Create storage and write episodes
+    tmp_dir = tempfile.mkdtemp()
     storage = MinariStorage.new(
-        data_path=f"{base_storage_path}-read-{n_episodes}-{buffer_length}",
+        data_path=tmp_dir,
         observation_space=observation_space,
         action_space=action_space,
         data_format=data_format,
     )
-    episodes = [
-        _generate_episode_buffer(
-            observation_space, action_space, length=buffer_length
-        )
-        for _ in range(n_episodes)
-    ]
-    storage.update_episodes(episodes)
     
-    def read_episodes():
-        ep_id = np.random.randint(0, n_episodes)
-        storage.get_episodes([ep_id])
+    time_add = timeit.timeit(lambda: storage.update_episodes(episodes), number=1)
     
-    benchmark.pedantic(
-        read_episodes,
-        rounds=3,
-        iterations=1,
-    )
+    time_gets = []
+    for batch_size in batch_sizes:
+        if batch_size <= dataset_size:
+            episodes_id = np.random.randint(0, dataset_size, size=batch_size)
+            time_get = timeit.timeit(lambda: storage.get_episodes(episodes_id), number=1)
+            time_gets.append((batch_size, time_get))
+    
+    shutil.rmtree(tmp_dir)
+    return time_add, time_gets
 
-    # Cleanup
-    shutil.rmtree(storage.data_path)
+def plot_times():
+    fig, ax = plt.subplots(len(TEST_SPACES), 2, figsize=(12, 25))
+    width = 0.25
+    x_labels = [(b, n) for b in BATCH_SIZE for n in DATASET_SIZE if b <= n]
+    arange_steps = np.arange(len(x_labels))
+
+    for plot_id, (space_name, space) in enumerate(TEST_SPACES.items()):
+        for x_id, data_format in enumerate(DATA_FORMATS):
+            plt_ax = ax[plot_id]
+            time_adds, time_gets = [], []
+            
+            for n_episode in DATASET_SIZE:
+                time_add, batch_times = time_storage(space, n_episode, BATCH_SIZE, data_format)                
+                time_adds.append(time_add)
+                    
+                for batch_size, time_get in batch_times:
+                    time_gets.append(time_get)
+                    print(f"{space_name} n={n_episode} b={batch_size} {data_format} add: {time_add}s get: {time_get}s", flush=True)
+            
+            offset = width * x_id
+            rects = plt_ax[0].bar(np.arange(len(DATASET_SIZE)) + offset, time_adds, width, label=data_format)
+            plt_ax[0].bar_label(rects, padding=3, fmt='%.2f')
+            rects = plt_ax[1].bar(arange_steps + offset, time_gets, width, label=data_format)
+            plt_ax[1].bar_label(rects, padding=3, fmt='%.2f')
+
+        plt_ax[0].set_ylabel('Time (s)')
+        plt_ax[0].set_xlabel('num_episodes')
+        plt_ax[0].set_title('Time write dataset with %s space' % space_name)
+        plt_ax[0].set_xticks(np.arange(len(DATASET_SIZE)) + width / 2)
+        plt_ax[0].set_xticklabels(DATASET_SIZE, rotation=45)
+    
+        plt_ax[1].set_ylabel('Time (s)')
+        plt_ax[1].set_xlabel('(batch_size, num_episodes)') 
+        plt_ax[1].set_title('Time read dataset with %s space' % space_name)
+        plt_ax[1].set_xticks(arange_steps + width / 2)
+        plt_ax[1].set_xticklabels(x_labels, rotation=45)
+
+    fig.legend(DATA_FORMATS, loc='upper left')
+    cpu_name = platform.processor()
+    fig.suptitle(f'Arrow/HDF5 benchmark ({cpu_name})')
+    fig.tight_layout()
+    fig.savefig('time_storage.pdf')
+    plt.show()
+
+if __name__ == "__main__":
+    plot_times()

@@ -45,7 +45,6 @@ all = ["minari[arrow,hdf5,gcs,hf,create]"]
 
 testing = [
     "pytest",
-    "pytest-benchmark",
     "gymnasium-robotics>=1.2.3",
     "mktestdocs",
 ]
