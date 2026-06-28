@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1782663680.27341 "main.aux" "main.bbl" "main" 1782663682.64034 0
+["bibtex main"] 1782663680.27341 "main.aux" "main.bbl" "main" 1782682333.21248 0
   "./refs.bib" 1782663668.03874 12743 a6fe8d040fb53bc576b7d65acfca5d5e ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1741388039 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1782663682.42445 14986 bdd8598b6c915ee47e612b50ff3d621b "pdflatex"
+  "main.aux" 1782682332.82184 14986 bdd8598b6c915ee47e612b50ff3d621b "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1782663680.40366 "main.tex" "main.pdf" "main" 1782663682.64081 0
+["pdflatex"] 1782682331.25756 "main.tex" "main.pdf" "main" 1782682333.21272 0
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1741388039 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/fontname/texfonts.map" 1741388039 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map" 1741388039 5466553 2748998d7db8078826afa1f272036265 ""
@@ -44,7 +44,6 @@
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1741388039 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1741388039 35752 024fb6c41858982481f6968b5fc26508 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1741388039 32569 5e5ddc8df908dea60932f3c484a54c0d ""
-  "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1741388039 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1741388039 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/txfonts/t1xbtt.pfb" 1741388039 26580 8886cc7827569e05fd10df25f221aef6 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb" 1741388039 26301 f08b3c26ea42c3177a262c2ac37d6a91 ""
@@ -163,10 +162,10 @@
   "figs/mujoco_reacher.png" 1782658887.86884 86123 0e9d2bc6a741d724db5411005d143f7f ""
   "figs/mujoco_swimmer.png" 1782658887.8705 158733 9ce253f17b39b09a0ca9bed2dcb58276 ""
   "figs/mujoco_walker.png" 1782658887.8747 212302 3b43c3451673e9e0a0514bcbe66df49e ""
-  "main.aux" 1782663682.42445 14986 bdd8598b6c915ee47e612b50ff3d621b "pdflatex"
+  "main.aux" 1782682332.82184 14986 bdd8598b6c915ee47e612b50ff3d621b "pdflatex"
   "main.bbl" 1782663680.40001 11270 b7fd65e7cd38807bc56ba775c38b6ba5 "bibtex main"
-  "main.out" 1782663682.42545 2380 6f34ae676190fddf5d0c03998f221f92 "pdflatex"
-  "main.tex" 1782663146.95749 54111 a203ed5e397a6f1262ee374a503a1ae0 ""
+  "main.out" 1782682332.82287 2380 6f34ae676190fddf5d0c03998f221f92 "pdflatex"
+  "main.tex" 1782682325.78236 53773 d44a0a222c841cfd65318675d3af8e01 ""
   (generated)
   "main.aux"
   "main.log"
