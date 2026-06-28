@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2025/Homebrew)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plainnat.bst
+Database file #1: refs.bib
+Warning--entry type for "agilerl" isn't style-file defined
+--line 53 of file refs.bib
+Warning--empty year in agilerl
+You've used 31 entries,
+            2773 wiz_defined-function locations,
+            750 strings with 12050 characters,
+and the built_in function-call counts, 18246 in all, are:
+= -- 1413
+> -- 1800
+< -- 5
++ -- 601
+- -- 570
+* -- 1680
+:= -- 2934
+add.period$ -- 95
+call.type$ -- 31
+change.case$ -- 283
+chr.to.int$ -- 31
+cite$ -- 63
+duplicate$ -- 563
+empty$ -- 1075
+format.name$ -- 607
+if$ -- 3669
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 10
+newline$ -- 165
+num.names$ -- 124
+pop$ -- 629
+preamble$ -- 1
+purify$ -- 251
+quote$ -- 0
+skip$ -- 598
+stack$ -- 0
+substring$ -- 164
+swap$ -- 48
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 341
+warning$ -- 1
+while$ -- 102
+width$ -- 0
+write$ -- 389
+(There were 2 warnings)

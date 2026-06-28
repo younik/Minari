@@ -1,0 +1,234 @@
+\begin{thebibliography}{31}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Bellemare} et~al.(2013){Bellemare}, {Naddaf}, {Veness}, and
+  {Bowling}]{ALE}
+M.~G. {Bellemare}, Y.~{Naddaf}, J.~{Veness}, and M.~{Bowling}.
+\newblock The arcade learning environment: An evaluation platform for general
+  agents.
+\newblock \emph{Journal of Artificial Intelligence Research}, 47:\penalty0
+  253--279, jun 2013.
+
+\bibitem[Bou et~al.(2023)Bou, Bettini, Dittert, Kumar, Sodhani, Yang,
+  Fabritiis, and Moens]{torchrl}
+Albert Bou, Matteo Bettini, Sebastian Dittert, Vikash Kumar, Shagun Sodhani,
+  Xiaomeng Yang, Gianni~De Fabritiis, and Vincent Moens.
+\newblock Torchrl: A data-driven decision-making library for pytorch, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.00577}.
+
+\bibitem[Brockman et~al.(2016)Brockman, Cheung, Pettersson, Schneider,
+  Schulman, Tang, and Zaremba]{gym}
+Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas Schneider, John Schulman,
+  Jie Tang, and Wojciech Zaremba.
+\newblock Openai gym, 2016.
+
+\bibitem[Cadene et~al.(2024)Cadene, Alibert, Soare, Gallouedec, Zouitine, and
+  Wolf]{lerobot}
+Remi Cadene, Simon Alibert, Alexander Soare, Quentin Gallouedec, Adil Zouitine,
+  and Thomas Wolf.
+\newblock Lerobot: State-of-the-art machine learning for real-world robotics in
+  pytorch.
+\newblock \url{https://github.com/huggingface/lerobot}, 2024.
+
+\bibitem[Chevalier-Boisvert et~al.(2018)Chevalier-Boisvert, Bahdanau, Lahlou,
+  Willems, Saharia, Nguyen, and Bengio]{babyai}
+Maxime Chevalier-Boisvert, Dzmitry Bahdanau, Salem Lahlou, Lucas Willems,
+  Chitwan Saharia, Thien~Huu Nguyen, and Yoshua Bengio.
+\newblock Babyai: A platform to study the sample efficiency of grounded
+  language learning.
+\newblock \emph{arXiv preprint arXiv:1810.08272}, 2018.
+
+\bibitem[Chevalier{-}Boisvert et~al.(2023)Chevalier{-}Boisvert, Dai, Towers,
+  Perez{-}Vicente, Willems, Lahlou, Pal, Castro, and Terry]{minigrid}
+Maxime Chevalier{-}Boisvert, Bolun Dai, Mark Towers, Rodrigo Perez{-}Vicente,
+  Lucas Willems, Salem Lahlou, Suman Pal, Pablo~Samuel Castro, and Jordan
+  Terry.
+\newblock Minigrid {\&} miniworld: Modular {\&} customizable reinforcement
+  learning environments for goal-oriented tasks.
+\newblock In \emph{Advances in Neural Information Processing Systems 36, New
+  Orleans, LA, USA}, December 2023.
+
+\bibitem[Espeholt et~al.(2018)Espeholt, Soyer, Munos, Simonyan, Mnih, Ward,
+  Doron, Firoiu, Harley, Dunning, Legg, and Kavukcuoglu]{impala}
+Lasse Espeholt, Hubert Soyer, Remi Munos, Karen Simonyan, Volodymir Mnih, Tom
+  Ward, Yotam Doron, Vlad Firoiu, Tim Harley, Iain Dunning, Shane Legg, and
+  Koray Kavukcuoglu.
+\newblock Impala: Scalable distributed deep-rl with importance weighted
+  actor-learner architectures, 2018.
+\newblock URL \url{https://arxiv.org/abs/1802.01561}.
+
+\bibitem[Fu et~al.(2020)Fu, Kumar, Nachum, Tucker, and Levine]{d4rl}
+Justin Fu, Aviral Kumar, Ofir Nachum, George Tucker, and Sergey Levine.
+\newblock D4rl: Datasets for deep data-driven reinforcement learning, 2020.
+
+\bibitem[Fujimoto and Gu(2021)]{TD3+BC}
+Scott Fujimoto and Shixiang~Shane Gu.
+\newblock A minimalist approach to offline reinforcement learning, 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.06860}.
+
+\bibitem[Fujimoto et~al.(2019)Fujimoto, Meger, and Precup]{BCQ}
+Scott Fujimoto, David Meger, and Doina Precup.
+\newblock Off-policy deep reinforcement learning without exploration, 2019.
+\newblock URL \url{https://arxiv.org/abs/1812.02900}.
+
+\bibitem[Gulcehre et~al.(2021)Gulcehre, Wang, Novikov, Paine, Colmenarejo,
+  Zolna, Agarwal, Merel, Mankowitz, Paduraru, Dulac-Arnold, Li, Norouzi,
+  Hoffman, Nachum, Tucker, Heess, and de~Freitas]{rlunplugged}
+Caglar Gulcehre, Ziyu Wang, Alexander Novikov, Tom~Le Paine, Sergio~Gomez
+  Colmenarejo, Konrad Zolna, Rishabh Agarwal, Josh Merel, Daniel Mankowitz,
+  Cosmin Paduraru, Gabriel Dulac-Arnold, Jerry Li, Mohammad Norouzi, Matt
+  Hoffman, Ofir Nachum, George Tucker, Nicolas Heess, and Nando de~Freitas.
+\newblock Rl unplugged: A suite of benchmarks for offline reinforcement
+  learning, 2021.
+\newblock URL \url{https://arxiv.org/abs/2006.13888}.
+
+\bibitem[Gupta et~al.(2019)Gupta, Kumar, Lynch, Levine, and
+  Hausman]{relaypolicylearning}
+Abhishek Gupta, Vikash Kumar, Corey Lynch, Sergey Levine, and Karol Hausman.
+\newblock Relay policy learning: Solving long-horizon tasks via imitation and
+  reinforcement learning, 2019.
+\newblock URL \url{https://arxiv.org/abs/1910.11956}.
+
+\bibitem[Haarnoja et~al.(2018)Haarnoja, Zhou, Abbeel, and Levine]{sac}
+Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, and Sergey Levine.
+\newblock Soft actor-critic: Off-policy maximum entropy deep reinforcement
+  learning with a stochastic actor, 2018.
+\newblock URL \url{https://arxiv.org/abs/1801.01290}.
+
+\bibitem[Henderson et~al.(2019)Henderson, Islam, Bachman, Pineau, Precup, and
+  Meger]{hendersonDeepReinforcementLearning2019}
+Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup,
+  and David Meger.
+\newblock Deep {{Reinforcement Learning}} that {{Matters}}, January 2019.
+
+\bibitem[Huang et~al.(2022)Huang, Dossa, Ye, Braga, Chakraborty, Mehta, and
+  Araújo]{cleanrl}
+Shengyi Huang, Rousslan Fernand~Julien Dossa, Chang Ye, Jeff Braga, Dipam
+  Chakraborty, Kinal Mehta, and João~G.M. Araújo.
+\newblock Cleanrl: High-quality single-file implementations of deep
+  reinforcement learning algorithms.
+\newblock \emph{Journal of Machine Learning Research}, 23\penalty0
+  (274):\penalty0 1--18, 2022.
+\newblock URL \url{http://jmlr.org/papers/v23/21-1342.html}.
+
+\bibitem[Kallinteris(2025)]{andreasthesis}
+Andreas Kallinteris.
+\newblock Building configurable reinforcement learning robotic environments.
+\newblock Diploma thesis, Technical University of Crete, Chania, Greece, 2025.
+\newblock URL \url{https://dias.library.tuc.gr/view/102570}.
+
+\bibitem[Kumar et~al.(2020)Kumar, Zhou, Tucker, and Levine]{CQL}
+Aviral Kumar, Aurick Zhou, George Tucker, and Sergey Levine.
+\newblock Conservative q-learning for offline reinforcement learning, 2020.
+\newblock URL \url{https://arxiv.org/abs/2006.04779}.
+
+\bibitem[Kuznetsov et~al.(2020)Kuznetsov, Shvechikov, Grishin, and Vetrov]{tqc}
+Arsenii Kuznetsov, Pavel Shvechikov, Alexander Grishin, and Dmitry Vetrov.
+\newblock Controlling overestimation bias with truncated mixture of continuous
+  distributional quantile critics, 2020.
+\newblock URL \url{https://arxiv.org/abs/2005.04269}.
+
+\bibitem[Lù et~al.(2024)Lù, Kasner, and Reddy]{weblinx}
+Xing~Han Lù, Zdeněk Kasner, and Siva Reddy.
+\newblock Weblinx: Real-world website navigation with multi-turn dialogue,
+  2024.
+
+\bibitem[Raffin et~al.(2021)Raffin, Hill, Gleave, Kanervisto, Ernestus, and
+  Dormann]{sb3}
+Antonin Raffin, Ashley Hill, Adam Gleave, Anssi Kanervisto, Maximilian
+  Ernestus, and Noah Dormann.
+\newblock Stable-baselines3: Reliable reinforcement learning implementations.
+\newblock \emph{Journal of Machine Learning Research}, 22\penalty0
+  (268):\penalty0 1--8, 2021.
+\newblock URL \url{http://jmlr.org/papers/v22/20-1364.html}.
+
+\bibitem[Rajeswaran et~al.(2018)Rajeswaran, Kumar, Gupta, Vezzani, Schulman,
+  Todorov, and Levine]{d4rl-pen}
+Aravind Rajeswaran, Vikash Kumar, Abhishek Gupta, Giulia Vezzani, John
+  Schulman, Emanuel Todorov, and Sergey Levine.
+\newblock Learning complex dexterous manipulation with deep reinforcement
+  learning and demonstrations, 2018.
+\newblock URL \url{https://arxiv.org/abs/1709.10087}.
+
+\bibitem[Ramos et~al.(2021)Ramos, Girgin, Hussenot, Vincent, Yakubovich,
+  Toyama, Gergely, Stanczyk, Marinier, Harmsen, Pietquin, and Momchev]{rlds}
+Sabela Ramos, Sertan Girgin, Léonard Hussenot, Damien Vincent, Hanna
+  Yakubovich, Daniel Toyama, Anita Gergely, Piotr Stanczyk, Raphael Marinier,
+  Jeremiah Harmsen, Olivier Pietquin, and Nikola Momchev.
+\newblock Rlds: an ecosystem to generate, share and use datasets in
+  reinforcement learning, 2021.
+
+\bibitem[Schulman et~al.(2017)Schulman, Wolski, Dhariwal, Radford, and
+  Klimov]{ppo}
+John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
+\newblock Proximal policy optimization algorithms, 2017.
+\newblock URL \url{https://arxiv.org/abs/1707.06347}.
+
+\bibitem[Seno and Imai(2022)]{d3rlpy}
+Takuma Seno and Michita Imai.
+\newblock d3rlpy: An offline deep reinforcement learning library.
+\newblock \emph{Journal of Machine Learning Research}, 23\penalty0
+  (315):\penalty0 1--20, 2022.
+\newblock URL \url{http://jmlr.org/papers/v23/22-0017.html}.
+
+\bibitem[Silver and Sutton(2025)]{experience-era}
+David Silver and Richard~S. Sutton.
+\newblock Welcome to the era of experience, 2025.
+\newblock URL
+  \url{https://storage.googleapis.com/deepmind-media/Era-of-Experience%20/The%20Era%20of%20Experience%20Paper.pdf}.
+
+\bibitem[Tarasov et~al.(2023)Tarasov, Nikulin, Akimov, Kurenkov, and
+  Kolesnikov]{corl}
+Denis Tarasov, Alexander Nikulin, Dmitry Akimov, Vladislav Kurenkov, and Sergey
+  Kolesnikov.
+\newblock {CORL}: Research-oriented deep offline reinforcement learning
+  library.
+\newblock In \emph{Thirty-seventh Conference on Neural Information Processing
+  Systems Datasets and Benchmarks Track}, 2023.
+\newblock URL \url{https://openreview.net/forum?id=SyAS49bBcv}.
+
+\bibitem[Tassa et~al.(2018)Tassa, Doron, Muldal, Erez, Li, de~Las~Casas,
+  Budden, Abdolmaleki, Merel, Lefrancq, Lillicrap, and
+  Riedmiller]{deepmindcontrolsuite}
+Yuval Tassa, Yotam Doron, Alistair Muldal, Tom Erez, Yazhe Li, Diego
+  de~Las~Casas, David Budden, Abbas Abdolmaleki, Josh Merel, Andrew Lefrancq,
+  Timothy Lillicrap, and Martin Riedmiller.
+\newblock Deepmind control suite, 2018.
+\newblock URL \url{https://arxiv.org/abs/1801.00690}.
+
+\bibitem[Todorov et~al.(2012)Todorov, Erez, and Tassa]{mujoco}
+Emanuel Todorov, Tom Erez, and Yuval Tassa.
+\newblock Mujoco: A physics engine for model-based control.
+\newblock In \emph{2012 IEEE/RSJ International Conference on Intelligent Robots
+  and Systems}, pages 5026--5033, 2012.
+\newblock \doi{10.1109/IROS.2012.6386109}.
+
+\bibitem[Towers et~al.(2024)Towers, Kwiatkowski, Terry, Balis, De~Cola, Deleu,
+  Goul{\~a}o, Kallinteris, Krimmel, KG, et~al.]{gymnasium}
+Mark Towers, Ariel Kwiatkowski, Jordan Terry, John~U Balis, Gianluca De~Cola,
+  Tristan Deleu, Manuel Goul{\~a}o, Andreas Kallinteris, Markus Krimmel, Arjun
+  KG, et~al.
+\newblock Gymnasium: A standard interface for reinforcement learning
+  environments.
+\newblock \emph{arXiv preprint arXiv:2407.17032}, 2024.
+
+\bibitem[Ustaran-Anderegg et~al.()Ustaran-Anderegg, Pratt, and
+  Sabal-Bermudez]{agilerl}
+Nicholas Ustaran-Anderegg, Michael Pratt, and Jaime Sabal-Bermudez.
+\newblock {AgileRL}.
+\newblock URL \url{https://github.com/AgileRL/AgileRL}.
+
+\bibitem[Yu et~al.(2019)Yu, Quillen, He, Julian, Hausman, Finn, and
+  Levine]{metaworld}
+Tianhe Yu, Deirdre Quillen, Zhanpeng He, Ryan Julian, Karol Hausman, Chelsea
+  Finn, and Sergey Levine.
+\newblock Meta-world: A benchmark and evaluation for multi-task and meta
+  reinforcement learning.
+\newblock In \emph{Conference on Robot Learning (CoRL)}, 2019.
+\newblock URL \url{https://arxiv.org/abs/1910.10897}.
+
+\end{thebibliography}
