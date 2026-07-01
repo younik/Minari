@@ -1,0 +1,20 @@
+{
+  "halfcheetah": {
+    "ref_min_score": -282.6071744781637,
+    "ref_max_score": 16242.92451511629,
+    "convention": "expert-relative (expert-dataset mean=100, random policy=0)",
+    "n_random_episodes": 50
+  },
+  "hopper": {
+    "ref_min_score": 17.047031714255322,
+    "ref_max_score": 3857.803603002423,
+    "convention": "expert-relative (expert-dataset mean=100, random policy=0)",
+    "n_random_episodes": 50
+  },
+  "walker2d": {
+    "ref_min_score": 1.966445774143205,
+    "ref_max_score": 6847.792741361276,
+    "convention": "expert-relative (expert-dataset mean=100, random policy=0)",
+    "n_random_episodes": 50
+  }
+}

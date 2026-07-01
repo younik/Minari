@@ -1,0 +1,18 @@
+# scratch / run-time artifacts (not part of the reproducible harness)
+slurm_logs/
+__pycache__/
+*.pyc
+.*_jobid
+results_val/
+results_protected/
+
+# one-off diagnostic / monitoring / smoke-test scripts
+diag_*.py
+diag_*.sh
+poll_*.sh
+watch_*.sh
+monitor.sh
+canary.sh
+v100check.sh
+validate_antmaze.sh
+smoke*.sh
