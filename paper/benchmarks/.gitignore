@@ -5,6 +5,7 @@ __pycache__/
 .*_jobid
 results_val/
 results_protected/
+results_normtest/
 
 # one-off diagnostic / monitoring / smoke-test scripts
 diag_*.py
@@ -16,3 +17,4 @@ canary.sh
 v100check.sh
 validate_antmaze.sh
 smoke*.sh
+results_smoke_v2/

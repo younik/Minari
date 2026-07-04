@@ -159,8 +159,18 @@ def keep_best_fraction(data, ep_returns, ep_slices, frac, discount):
 
 
 def apply_reward_transform(data, algo, group, normalize_reward,
-                           reward_scale, reward_bias, ep_returns, max_ep_steps):
-    """Replicate CORL's modify_reward (per-algo)."""
+                           reward_scale, reward_bias, ep_returns, max_ep_steps,
+                           cql_reward_mode="corl"):
+    """Replicate CORL's modify_reward (per-algo).
+
+    ``cql_reward_mode`` is a diagnostic override for the CQL antmaze reward:
+      - "corl"      : CORL-faithful ``r*reward_scale + reward_bias`` (default).
+      - "minus_one" : ``r - 1`` (the same transform IQL/TD3+BC/AWAC use for
+                      antmaze). CORL's scale/bias recipe assumes D4RL's *sparse*
+                      reward; on Minari's dense continuing-task antmaze it becomes
+                      a mostly-+5 dense signal. This arm tests whether the
+                      sparse-tuned reward transform (not CQL itself) is the cause.
+    """
     r = data["rewards"]
     if algo in ("iql", "td3_bc", "awac"):
         if normalize_reward:
@@ -174,7 +184,10 @@ def apply_reward_transform(data, algo, group, normalize_reward,
             if group in LOCO:
                 rng = ep_returns.max() - ep_returns.min()
                 r = r / rng * max_ep_steps
-            r = r * reward_scale + reward_bias
+            if group == "antmaze" and cql_reward_mode == "minus_one":
+                r = r - 1.0
+            else:
+                r = r * reward_scale + reward_bias
     data["rewards"] = r.astype(np.float32)
     return data
 
@@ -388,6 +401,12 @@ def main():
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--out", required=True)
     ap.add_argument("--mujoco_ref", default=os.path.join(HERE, "mujoco_norm.json"))
+    ap.add_argument("--force_normalize", choices=["auto", "on", "off"], default="auto",
+                    help="Override config 'normalize' (state normalization). "
+                         "auto = use config value (default; reproduces committed results).")
+    ap.add_argument("--cql_reward_mode", choices=["corl", "minus_one"], default="corl",
+                    help="Diagnostic: CQL antmaze reward transform. corl = CORL-faithful "
+                         "r*scale+bias (default). minus_one = r-1 (IQL-style).")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -402,6 +421,8 @@ def main():
     cfg = load_config(args.algo, args.dataset)
     group = group_of(args.dataset)
     normalize_states = cfg.get("normalize", True)
+    if args.force_normalize != "auto":
+        normalize_states = (args.force_normalize == "on")
     normalize_reward = cfg.get("normalize_reward", False)
     reward_scale = cfg.get("reward_scale", 1.0)
     reward_bias = cfg.get("reward_bias", 0.0)
@@ -411,6 +432,7 @@ def main():
     print(f"[{args.algo}] {args.dataset} seed={args.seed} | "
           f"normalize_states={normalize_states} normalize_reward={normalize_reward} "
           f"reward_scale={reward_scale} reward_bias={reward_bias} "
+          f"cql_reward_mode={args.cql_reward_mode} "
           f"eval_freq={eval_freq} n_episodes={n_episodes}", flush=True)
 
     ds = minari.load_dataset(args.dataset, download=True)
@@ -443,7 +465,8 @@ def main():
 
     # Reward transform
     data = apply_reward_transform(data, args.algo, group, normalize_reward,
-                                  reward_scale, reward_bias, ep_returns, max_ep_steps)
+                                  reward_scale, reward_bias, ep_returns, max_ep_steps,
+                                  cql_reward_mode=args.cql_reward_mode)
 
     # State normalization
     if normalize_states:

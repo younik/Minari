@@ -399,13 +399,13 @@ pointmaze/umaze-v2           & 53.8  & 55.1    & 71.9   & 52.3  & 85.5  & 52.4  
 pointmaze/medium-v2          & 78.8  & 59.3    & 105.8  & 85.3  & 80.7  & 38.6  \\
 pointmaze/large-v2           & 42.3  & 36.9    & 80.1   & 111.8 & 63.3  & 43.3  \\ \midrule
 \textit{pointmaze average}   & 58.3  & 50.4    & 85.9   & 83.1  & 76.5  & 44.8  \\ \midrule
-antmaze/umaze-v1             & 100.1 & 57.8    & 106.5  & 63.1  & 1.9   & 96.4  \\
-antmaze/umaze-diverse-v1     & 122.2 & 26.1    & 96.7   & 102.0 & 9.6   & 92.4  \\
-antmaze/medium-play-v1       & 55.8  & 11.7    & 103.6  & 107.4 & 17.4  & 65.5  \\
-antmaze/medium-diverse-v1    & 7.9   & 3.1     & 13.5   & 25.9  & 1.5   & 8.9   \\
-antmaze/large-play-v1        & 22.8  & 5.9     & 51.3   & 117.2 & 14.0  & 19.5  \\
-antmaze/large-diverse-v1     & 10.5  & 5.7     & 28.9   & 46.5  & 2.3   & 24.0  \\ \midrule
-\textit{antmaze average}     & 53.2  & 18.4    & 66.8   & 77.0  & 7.8   & 51.1  \\ \midrule
+antmaze/umaze-v2             & 101.7 & 95.8    & 101.7  & 104.2 & 48.3  & 91.3  \\
+antmaze/umaze-diverse-v2     & 101.4 & 95.4    & 102.8  & 102.8 & 84.0  & 93.3  \\
+antmaze/medium-play-v2       & 48.2  & 44.7    & 78.1   & 92.1  & 43.4  & 54.4  \\
+antmaze/medium-diverse-v2    & 19.7  & 13.3    & 28.1   & 68.3  & 6.8   & 25.7  \\
+antmaze/large-play-v2        & 26.0  & 29.4    & 42.4   & 112.6 & 26.8  & 37.7  \\
+antmaze/large-diverse-v2     & 18.6  & 17.1    & 27.1   & 31.0  & 7.8   & 28.3  \\ \midrule
+\textit{antmaze average}     & 52.6  & 49.3    & 63.4   & 85.2  & 36.2  & 55.1  \\ \midrule
 pen/human-v2                 & 56.9  & 17.5    & 0.4    & 77.3  & 35.4  & 64.0  \\
 pen/cloned-v2                & 68.0  & 42.0    & 36.6   & 77.8  & 14.3  & 79.6  \\
 pen/expert-v2                & 110.4 & 62.2    & 114.7  & 118.7 & 18.8  & 117.1 \\ \midrule
@@ -423,7 +423,7 @@ relocate/cloned-v2           & 0.2   & 0.2     & 0.3    & 0.2   & 0.3   & 0.7   
 relocate/expert-v2           & 106.7 & 98.4    & 1.2    & 107.2 & 0.3   & 106.7 \\ \midrule
 \textit{relocate average}    & 36.1  & 32.9    & 0.6    & 36.2  & 0.3   & 36.0  \\ \bottomrule
 \end{tabular}
-\caption{Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite{corl} implementations. Each cell is the mean over 3 seeds (2 for CQL on \textsc{Ant Maze} \texttt{large-diverse}) of the best-checkpoint policy (the maximum over evaluation checkpoints during training), evaluated with each algorithm's CORL evaluation configuration ($10$--$100$ episodes); italicised rows give per-group averages. As in Table~\ref{tab:benchmarks_mujoco}, we report the best rather than the final checkpoint because off-policy offline RL methods can become unstable and diverge at the final checkpoint on narrow datasets, so the last-checkpoint score can understate the performance reached during training; reporting the best (or both) checkpoint is standard practice in offline RL~\cite{corl}. Scores are normalized as $100\,(R-R_{\min})/(R_{\max}-R_{\min})$, where $R_{\min}$ and $R_{\max}$ are the reference random- and expert-policy returns stored in each dataset's metadata, following D4RL~\cite{d4rl}. CQL underperforms the other methods on \textsc{Ant Maze} even at the best checkpoint, on which it is known to be highly sensitive to reward scaling and hyperparameters.}
+\caption{Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite{corl} implementations. Each cell is the mean over 3 seeds of the best-checkpoint policy (the maximum over evaluation checkpoints during training), evaluated with each algorithm's CORL evaluation configuration ($10$--$100$ episodes); italicised rows give per-group averages. As in Table~\ref{tab:benchmarks_mujoco}, we report the best rather than the final checkpoint because off-policy offline RL methods can become unstable and diverge at the final checkpoint on narrow datasets, so the last-checkpoint score can understate the performance reached during training; reporting the best (or both) checkpoint is standard practice in offline RL~\cite{corl}. Scores are normalized as $100\,(R-R_{\min})/(R_{\max}-R_{\min})$, where $R_{\min}$ and $R_{\max}$ are the reference random- and expert-policy returns stored in each dataset's metadata, following D4RL~\cite{d4rl}. CQL underperforms the other methods on \textsc{Ant Maze} even at the best checkpoint, on which it is known to be highly sensitive to reward scaling and hyperparameters.}
 \label{tab:benchmarks_d4rl}
 \end{table}
 The D4RL dataset group contains a reproduction of the datasets from the D4RL benchmark \cite{d4rl}. For reproducibility, we regenerated the datasets using the same principles. The collection includes:
