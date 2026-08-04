@@ -229,7 +229,7 @@ def list_remote_datasets(
                         gen_dataset_id(namespace, dataset_name, prev_version)
                     ]
                 max_version[namespace][dataset_name] = version
-            else:
+            elif version < prev_version:
                 del remote_datasets[dataset_id]
 
     return remote_datasets
