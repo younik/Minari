@@ -47,6 +47,10 @@
 \citation{corl}
 \citation{corl}
 \citation{d4rl}
+\citation{corl}
+\citation{corl}
+\citation{d4rl}
+\citation{d4rl}
 \citation{d4rl-pen}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Improving reproducibility in Offline RL}{5}{subsection.3.3}\protected@file@percent }
 \newlabel{sec:repro}{{3.3}{5}{Improving reproducibility in Offline RL}{subsection.3.3}{}}
@@ -55,12 +59,12 @@
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Overview of the dataset collections shipped with Minari. Counts are approximate and grow over time; per-dataset statistics (episodes, steps, returns) are available in the documentation and in each dataset's metadata. Together these collections span discrete and continuous actions and state-, grid-, pixel-, and text-based observations.}}{5}{table.3}\protected@file@percent }
 \newlabel{tab:collections}{{3}{5}{Overview of the dataset collections shipped with Minari. Counts are approximate and grow over time; per-dataset statistics (episodes, steps, returns) are available in the documentation and in each dataset's metadata. Together these collections span discrete and continuous actions and state-, grid-, pixel-, and text-based observations}{table.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}D4RL}{5}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite  {corl} implementations. Each cell is the mean over 3 seeds of the best-checkpoint policy (the maximum over evaluation checkpoints during training), evaluated with each algorithm's CORL evaluation configuration ($10$--$100$ episodes); italicised rows give per-group averages. As in Table~\ref {tab:benchmarks_mujoco}, we report the best rather than the final checkpoint because off-policy offline RL methods can become unstable and diverge at the final checkpoint on narrow datasets, so the last-checkpoint score can understate the performance reached during training; reporting the best (or both) checkpoint is standard practice in offline RL~\cite  {corl}. Scores are normalized as $100\,(R-R_{\min  })/(R_{\max  }-R_{\min  })$, where $R_{\min  }$ and $R_{\max  }$ are the reference random- and expert-policy returns stored in each dataset's metadata, following D4RL~\cite  {d4rl}. CQL underperforms the other methods on \textsc  {Ant Maze} even at the best checkpoint, on which it is known to be highly sensitive to reward scaling and hyperparameters.}}{6}{table.4}\protected@file@percent }
+\newlabel{tab:benchmarks_d4rl}{{4}{6}{Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite {corl} implementations. Each cell is the mean over 3 seeds of the best-checkpoint policy (the maximum over evaluation checkpoints during training), evaluated with each algorithm's CORL evaluation configuration ($10$--$100$ episodes); italicised rows give per-group averages. As in Table~\ref {tab:benchmarks_mujoco}, we report the best rather than the final checkpoint because off-policy offline RL methods can become unstable and diverge at the final checkpoint on narrow datasets, so the last-checkpoint score can understate the performance reached during training; reporting the best (or both) checkpoint is standard practice in offline RL~\cite {corl}. Scores are normalized as $100\,(R-R_{\min })/(R_{\max }-R_{\min })$, where $R_{\min }$ and $R_{\max }$ are the reference random- and expert-policy returns stored in each dataset's metadata, following D4RL~\cite {d4rl}. CQL underperforms the other methods on \textsc {Ant Maze} even at the best checkpoint, on which it is known to be highly sensitive to reward scaling and hyperparameters}{table.4}{}}
 \citation{relaypolicylearning}
 \citation{minigrid}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Representative D4RL environments (left to right): \textsc  {Ant Maze}, \textsc  {Pen}, \textsc  {Door}, \textsc  {Kitchen}, and \textsc  {Minigrid}. \textsc  {Point Maze}, \textsc  {Hammer}, and \textsc  {Relocate} are also part of the collection (Sec.~\ref {sec:datasets}) but not shown here.}}{6}{figure.2}\protected@file@percent }
-\newlabel{fig:dr4l}{{2}{6}{Representative D4RL environments (left to right): \textsc {Ant Maze}, \textsc {Pen}, \textsc {Door}, \textsc {Kitchen}, and \textsc {Minigrid}. \textsc {Point Maze}, \textsc {Hammer}, and \textsc {Relocate} are also part of the collection (Sec.~\ref {sec:datasets}) but not shown here}{figure.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite  {corl} implementations. Blank cells indicate runs not yet completed. \textcolor {red}{Authors: complete the empty cells and per-group averages, and state the number of seeds and the normalization convention used.}}}{6}{table.4}\protected@file@percent }
-\newlabel{tab:benchmarks_d4rl}{{4}{6}{Normalized scores of offline RL algorithms on the D4RL navigation and manipulation datasets reproduced in Minari, using the CORL~\cite {corl} implementations. Blank cells indicate runs not yet completed. \textcolor {red}{Authors: complete the empty cells and per-group averages, and state the number of seeds and the normalization convention used.}}{table.4}{}}
+\citation{corl}
+\citation{corl}
 \citation{corl}
 \citation{corl}
 \citation{mujoco}
@@ -68,32 +72,32 @@
 \citation{sb3}
 \citation{sac}
 \citation{tqc}
-\citation{babyai}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Representative D4RL environments (left to right): \textsc  {Ant Maze}, \textsc  {Pen}, \textsc  {Door}, \textsc  {Kitchen}, and \textsc  {Minigrid}. \textsc  {Point Maze}, \textsc  {Hammer}, and \textsc  {Relocate} are also part of the collection (Sec.~\ref {sec:datasets}) but not shown here.}}{7}{figure.2}\protected@file@percent }
+\newlabel{fig:dr4l}{{2}{7}{Representative D4RL environments (left to right): \textsc {Ant Maze}, \textsc {Pen}, \textsc {Door}, \textsc {Kitchen}, and \textsc {Minigrid}. \textsc {Point Maze}, \textsc {Hammer}, and \textsc {Relocate} are also part of the collection (Sec.~\ref {sec:datasets}) but not shown here}{figure.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces MuJoCo datasets: \textsc  {Swimmer}, \textsc  {Reacher}, \textsc  {Hopper}, \textsc  {Walker2d} and \textsc  {Humanoid} environments (left to right).}}{7}{figure.3}\protected@file@percent }
 \newlabel{fig:mujoco}{{3}{7}{MuJoCo datasets: \textsc {Swimmer}, \textsc {Reacher}, \textsc {Hopper}, \textsc {Walker2d} and \textsc {Humanoid} environments (left to right)}{figure.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Normalized scores of offline RL algorithms on the MuJoCo locomotion datasets generated in Minari, using the CORL~\cite  {corl} implementations. Blank cells indicate runs not yet completed. \textcolor {red}{Authors: complete the empty cells and per-group averages, and state the number of seeds and the normalization convention used.}}}{7}{table.5}\protected@file@percent }
-\newlabel{tab:benchmarks_mujoco}{{5}{7}{Normalized scores of offline RL algorithms on the MuJoCo locomotion datasets generated in Minari, using the CORL~\cite {corl} implementations. Blank cells indicate runs not yet completed. \textcolor {red}{Authors: complete the empty cells and per-group averages, and state the number of seeds and the normalization convention used.}}{table.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}MuJoCo}{7}{subsection.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}BabyAI}{7}{subsection.4.3}\protected@file@percent }
+\citation{babyai}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Normalized scores of offline RL algorithms on the MuJoCo locomotion datasets generated in Minari, using the CORL~\cite  {corl} implementations. Each cell is the mean over 3 seeds of the best-checkpoint policy (the maximum over evaluation checkpoints during the $10^6$ gradient steps of training), evaluated for 10 episodes; italicised rows give per-environment averages over the three skill tiers. We report the best rather than the final checkpoint because off-policy actor-critic offline methods (notably TD3+BC, AWAC, and CQL) are known to become unstable and diverge at the final checkpoint on narrow expert datasets, so the last-checkpoint score can substantially understate the performance reached during training; reporting both the last and best checkpoint is standard practice in offline RL~\cite  {corl}. Scores use the same normalization as Table~\ref {tab:benchmarks_d4rl}, $100\,(R-R_{\min  })/(R_{\max  }-R_{\min  })$, with $R_{\min  }$ the mean return of a random policy (50 episodes) and $R_{\max  }$ the mean return of the corresponding \textit  {expert} dataset. Note that, unlike the canonical D4RL normalization, $R_{\max  }$ here is Minari's own expert-dataset mean rather than a fixed reference expert score; because Minari's SAC/TQC experts are stronger than D4RL's reference experts (e.g.\ $1.34\times $ on \textsc  {HalfCheetah} and $1.49\times $ on \textsc  {Walker2d}), a score of $100$ corresponds to a higher absolute return than in D4RL, and these values are therefore not directly comparable to published D4RL scores.}}{8}{table.5}\protected@file@percent }
+\newlabel{tab:benchmarks_mujoco}{{5}{8}{Normalized scores of offline RL algorithms on the MuJoCo locomotion datasets generated in Minari, using the CORL~\cite {corl} implementations. Each cell is the mean over 3 seeds of the best-checkpoint policy (the maximum over evaluation checkpoints during the $10^6$ gradient steps of training), evaluated for 10 episodes; italicised rows give per-environment averages over the three skill tiers. We report the best rather than the final checkpoint because off-policy actor-critic offline methods (notably TD3+BC, AWAC, and CQL) are known to become unstable and diverge at the final checkpoint on narrow expert datasets, so the last-checkpoint score can substantially understate the performance reached during training; reporting both the last and best checkpoint is standard practice in offline RL~\cite {corl}. Scores use the same normalization as Table~\ref {tab:benchmarks_d4rl}, $100\,(R-R_{\min })/(R_{\max }-R_{\min })$, with $R_{\min }$ the mean return of a random policy (50 episodes) and $R_{\max }$ the mean return of the corresponding \textit {expert} dataset. Note that, unlike the canonical D4RL normalization, $R_{\max }$ here is Minari's own expert-dataset mean rather than a fixed reference expert score; because Minari's SAC/TQC experts are stronger than D4RL's reference experts (e.g.\ $1.34\times $ on \textsc {HalfCheetah} and $1.49\times $ on \textsc {Walker2d}), a score of $100$ corresponds to a higher absolute return than in D4RL, and these values are therefore not directly comparable to published D4RL scores}{table.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces BabyAI datasets: \textsc  {GoToRedBall}, \textsc  {KeyCorridor} (two variants), and \textsc  {MoveTwoAcross} tasks (left to right).}}{8}{figure.4}\protected@file@percent }
+\newlabel{fig:babyai}{{4}{8}{BabyAI datasets: \textsc {GoToRedBall}, \textsc {KeyCorridor} (two variants), and \textsc {MoveTwoAcross} tasks (left to right)}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}BabyAI}{8}{subsection.4.3}\protected@file@percent }
 \citation{ALE}
 \citation{cleanrl}
 \citation{ppo}
 \citation{impala}
 \citation{metaworld}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces BabyAI datasets: \textsc  {GoToRedBall}, \textsc  {KeyCorridor} (two variants), and \textsc  {MoveTwoAcross} tasks (left to right).}}{8}{figure.4}\protected@file@percent }
-\newlabel{fig:babyai}{{4}{8}{BabyAI datasets: \textsc {GoToRedBall}, \textsc {KeyCorridor} (two variants), and \textsc {MoveTwoAcross} tasks (left to right)}{figure.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces ALE datasets: \textsc  {Breakout}, \textsc  {Space Invaders}, \textsc  {Boxing}, \textsc  {Ms PacMan} and \textsc  {Montezuma's Revenge} environments (left to right).}}{8}{figure.5}\protected@file@percent }
-\newlabel{fig:atari}{{5}{8}{ALE datasets: \textsc {Breakout}, \textsc {Space Invaders}, \textsc {Boxing}, \textsc {Ms PacMan} and \textsc {Montezuma's Revenge} environments (left to right)}{figure.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Atari}{8}{subsection.4.4}\protected@file@percent }
 \citation{weblinx}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces ALE datasets: \textsc  {Breakout}, \textsc  {Space Invaders}, \textsc  {Boxing}, \textsc  {Ms PacMan} and \textsc  {Montezuma's Revenge} environments (left to right).}}{9}{figure.5}\protected@file@percent }
+\newlabel{fig:atari}{{5}{9}{ALE datasets: \textsc {Breakout}, \textsc {Space Invaders}, \textsc {Boxing}, \textsc {Ms PacMan} and \textsc {Montezuma's Revenge} environments (left to right)}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Atari}{9}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}MetaWorld}{9}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}WebAgents}{9}{subsection.4.6}\protected@file@percent }
 \citation{d4rl}
 \citation{TD3+BC}
 \citation{CQL}
 \citation{corl}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}MetaWorld}{9}{subsection.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}WebAgents}{9}{subsection.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Benchmarks}{9}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{9}{section.6}\protected@file@percent }
 \bibstyle{plainnat}
 \bibdata{refs}
 \bibcite{ALE}{{1}{2013}{{{Bellemare} et~al.}}{{{Bellemare}, {Naddaf}, {Veness}, and {Bowling}}}}
@@ -101,6 +105,8 @@
 \bibcite{gym}{{3}{2016}{{Brockman et~al.}}{{Brockman, Cheung, Pettersson, Schneider, Schulman, Tang, and Zaremba}}}
 \bibcite{lerobot}{{4}{2024}{{Cadene et~al.}}{{Cadene, Alibert, Soare, Gallouedec, Zouitine, and Wolf}}}
 \bibcite{babyai}{{5}{2018}{{Chevalier-Boisvert et~al.}}{{Chevalier-Boisvert, Bahdanau, Lahlou, Willems, Saharia, Nguyen, and Bengio}}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Benchmarks}{10}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{10}{section.6}\protected@file@percent }
 \bibcite{minigrid}{{6}{2023}{{Chevalier{-}Boisvert et~al.}}{{Chevalier{-}Boisvert, Dai, Towers, Perez{-}Vicente, Willems, Lahlou, Pal, Castro, and Terry}}}
 \bibcite{impala}{{7}{2018}{{Espeholt et~al.}}{{Espeholt, Soyer, Munos, Simonyan, Mnih, Ward, Doron, Firoiu, Harley, Dunning, Legg, and Kavukcuoglu}}}
 \bibcite{d4rl}{{8}{2020}{{Fu et~al.}}{{Fu, Kumar, Nachum, Tucker, and Levine}}}
@@ -127,9 +133,9 @@
 \bibcite{gymnasium}{{29}{2024}{{Towers et~al.}}{{Towers, Kwiatkowski, Terry, Balis, De~Cola, Deleu, Goul{\~a}o, Kallinteris, Krimmel, KG, et~al.}}}
 \bibcite{agilerl}{{30}{}{{Ustaran-Anderegg et~al.}}{{Ustaran-Anderegg, Pratt, and Sabal-Bermudez}}}
 \bibcite{metaworld}{{31}{2019}{{Yu et~al.}}{{Yu, Quillen, He, Julian, Hausman, Finn, and Levine}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Dataset Metadata}{11}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Dataset Metadata}{12}{appendix.A}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces List of metadata attributes of a Minari dataset.}}{12}{table.6}\protected@file@percent }
 \newlabel{tab:metadata}{{6}{12}{List of metadata attributes of a Minari dataset}{table.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {B}Environment support}{12}{appendix.B}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C}Episode data structure}{12}{appendix.C}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C}Episode data structure}{13}{appendix.C}\protected@file@percent }
 \gdef \@abspage@last{13}
