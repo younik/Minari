@@ -74,8 +74,12 @@ def dict_obs_keys(obs_space, group):
     algorithm. PointMaze's ``observation`` already contains the ball's position,
     so ``achieved_goal`` is redundant there and we keep (observation, desired_goal).
     """
-    order = (("observation", "achieved_goal", "desired_goal") if group == "antmaze"
-             else ("observation", "desired_goal"))
+    if group == "antmaze":
+        order = ("observation", "achieved_goal", "desired_goal")
+    elif group == "pointmaze_fixedgoal":
+        order = ("observation",)
+    else:
+        order = ("observation", "desired_goal")
     return [k for k in order if k in obs_space.spaces]
 
 
@@ -270,6 +274,50 @@ def load_config(algo, dataset_id):
 # --------------------------------------------------------------------------- #
 # Evaluation
 # --------------------------------------------------------------------------- #
+def _walls(maze_map):
+    return [[1 if c == 1 else 0 for c in row] for row in maze_map]
+
+
+def make_eval_env(ds, group):
+    """Recover the evaluation env, in the coordinate frame of the dataset.
+
+    Pointmaze/adroit/mujoco: the stored eval_env_spec, as is.
+
+    AntMaze: the eval task is the D4RL one, a fixed start ('r') and goal ('g')
+    cell taken from the stored eval_env_spec. Two pitfalls:
+      * The data-generation env_spec usually has no 'r'/'g' cells (medium,
+        large, umaze-diverse), so recover_environment(eval_env=False) samples a
+        random start and goal every episode -- a different, much easier task
+        than D4RL's long fixed route.
+      * For the umaze datasets, the eval_env_spec maze_map is rotated 180 deg
+        relative to the data env_spec (a negated cell->world frame), so the
+        goal-conditioned policy would see out-of-distribution positions/goals.
+    We therefore build the eval env from the data env_spec, with the eval
+    spec's 'r'/'g' cells placed on the data map, rotating them 180 deg when the
+    wall layouts only agree up to that rotation.
+    """
+    if group != "antmaze":
+        return ds.recover_environment(eval_env=True)
+    data_map = ds.env_spec.kwargs["maze_map"]
+    eval_map = ds._eval_env_spec.kwargs["maze_map"]
+    H, W = len(eval_map), len(eval_map[0])
+    if _walls(eval_map) == _walls(data_map):
+        rot = lambda i, j: (i, j)
+    elif _walls([row[::-1] for row in eval_map[::-1]]) == _walls(data_map):
+        rot = lambda i, j: (H - 1 - i, W - 1 - j)
+    else:
+        raise ValueError(f"antmaze eval map does not match data map for {ds.spec.dataset_id}")
+    new_map = [[1 if c == 1 else 0 for c in row] for row in data_map]
+    for i, row in enumerate(eval_map):
+        for j, c in enumerate(row):
+            if c in ("r", "g"):
+                ri, rj = rot(i, j)
+                new_map[ri][rj] = c
+    spec = ds.env_spec
+    kwargs = dict(spec.kwargs, maze_map=new_map)
+    return gym.make(spec.id, max_episode_steps=spec.max_episode_steps, **kwargs)
+
+
 @torch.no_grad()
 def evaluate(env, actor, n_episodes, flatten, state_mean, state_std, device, seed):
     actor.eval()
@@ -407,6 +455,11 @@ def main():
     ap.add_argument("--cql_reward_mode", choices=["corl", "minus_one"], default="corl",
                     help="Diagnostic: CQL antmaze reward transform. corl = CORL-faithful "
                          "r*scale+bias (default). minus_one = r-1 (IQL-style).")
+    ap.add_argument("--pointmaze_relabel", action="store_true",
+                    help="Diagnostic: relabel pointmaze D4RL-style (relabel_maze2d_rewards.py). "
+                         "Reward = 1 if the next position is within 0.5 of the eval env's fixed "
+                         "goal, no terminals, and the policy state is the 4-dim observation "
+                         "without desired_goal (single fixed-goal task, as in D4RL maze2d).")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -436,23 +489,26 @@ def main():
           f"eval_freq={eval_freq} n_episodes={n_episodes}", flush=True)
 
     ds = minari.load_dataset(args.dataset, download=True)
-    # AntMaze's stored eval_env_spec uses a maze_map that is rotated 180 deg
-    # relative to the data-generation env_spec, i.e. a different cell->world
-    # coordinate frame. The dataset's observations (achieved_goal/desired_goal)
-    # live in the env_spec frame, so evaluating in the eval_env_spec frame feeds
-    # the goal-conditioned policy out-of-distribution goals and yields exactly 0
-    # reward for every algorithm. Recover the data-generation env for antmaze so
-    # the eval frame matches the dataset. Other groups (pointmaze, adroit) have a
-    # consistent eval_env_spec and keep using it.
-    use_eval_env_spec = group_of(args.dataset) != "antmaze"
-    eval_env = ds.recover_environment(eval_env=use_eval_env_spec)
+    eval_env = make_eval_env(ds, group_of(args.dataset))
     max_ep_steps = eval_env.spec.max_episode_steps or 1000
     obs_space = eval_env.observation_space
-    flatten, state_dim = make_flattener(obs_space, group)
+    obs_group = group
+    if args.pointmaze_relabel:
+        assert group == "pointmaze", "--pointmaze_relabel only applies to pointmaze"
+        obs_group = "pointmaze_fixedgoal"
+    flatten, state_dim = make_flattener(obs_space, obs_group)
     action_dim = int(np.prod(eval_env.action_space.shape))
     max_action = float(eval_env.action_space.high[0])
 
-    data, ep_returns, ep_slices = load_dataset_arrays(ds, obs_space, group)
+    data, ep_returns, ep_slices = load_dataset_arrays(ds, obs_space, obs_group)
+    if args.pointmaze_relabel:
+        goal = np.asarray(eval_env.unwrapped.maze.unique_goal_locations[0], dtype=np.float32)
+        pos = data["next_observations"][:, :2]   # pointmaze observation = (x, y, vx, vy)
+        data["rewards"] = (np.linalg.norm(pos - goal, axis=1) <= 0.5).astype(np.float32)
+        data["terminals"] = np.zeros_like(data["terminals"])
+        ep_returns = np.asarray([data["rewards"][a:b].sum() for a, b in ep_slices])
+        print(f"  pointmaze_relabel: goal={goal} rewarded frac={data['rewards'].mean():.4f}",
+              flush=True)
     print(f"  transitions={len(data['rewards'])} episodes={len(ep_slices)} "
           f"state_dim={state_dim} action_dim={action_dim} max_action={max_action} "
           f"max_ep_steps={max_ep_steps}", flush=True)

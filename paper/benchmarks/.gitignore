@@ -18,3 +18,5 @@ v100check.sh
 validate_antmaze.sh
 smoke*.sh
 results_smoke_v2/
+results_antmaze_randgoal/
+results_relabel/

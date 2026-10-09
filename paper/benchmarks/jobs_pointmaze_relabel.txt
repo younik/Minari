@@ -1,0 +1,6 @@
+iql D4RL/pointmaze/medium-v2 0
+iql D4RL/pointmaze/medium-v2 1
+iql D4RL/pointmaze/medium-v2 2
+td3_bc D4RL/pointmaze/medium-v2 0
+td3_bc D4RL/pointmaze/medium-v2 1
+td3_bc D4RL/pointmaze/medium-v2 2
