@@ -1,12 +1,12 @@
 \documentclass{article}
 
-% arxiv style (https://github.com/kourgeorge/arxiv-style)
-\usepackage{arxiv}
+% JMLR style (https://github.com/JmlrOrg/jmlr-style-file). jmlr2e already
+% loads natbib, graphicx, amssymb, and hyperref, and sets the bibliography style.
+\usepackage{jmlr2e}
+\usepackage{lastpage}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{natbib}         % citation styles (citet/citep)
-\usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
@@ -25,7 +25,6 @@
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 
 \usepackage{listings}
-\usepackage{graphicx}
 \usepackage{courier}
 % \usepackage{color}
 
@@ -163,41 +162,39 @@ showstringspaces=false
 \newcommand{\datasetsize}{56\,GB\xspace}
 
 
-%\title{Minari: Facilitating Community-Based Reinforcement Learning Datasets}
+% Heading fields: volume, year, pages, submitted, published, paper id, authors.
+% JMLR fills in volume, dates, and paper id on acceptance.
+\jmlrheading{}{2026}{1-\pageref{LastPage}}{10/26}{}{}{Omar G.~Younis, Rodrigo Perez-Vicente, John U.~Balis, Alex Davey, Will Dudley, and Jordan K.~Terry}
+
+% Running title (at most 50 characters) and short author list.
+\ShortHeadings{Minari: Collaborative RL Datasets}{Younis et al.}
+\firstpageno{1}
+
+% JMLR's text block is narrower than arXiv's; give the line breaker some slack.
+\setlength{\emergencystretch}{1.5em}
+
 \title{Minari: Infrastructure for Collaborative Reinforcement Learning Datasets}
 
-% Uncomment to override the `A preprint' in the header
-%\renewcommand{\headeright}{Technical Report}
-%\renewcommand{\undertitle}{Technical Report}
-\renewcommand{\shorttitle}{Minari}
+% TODO: fill in the missing email addresses.
+\author{\name Omar G.~Younis \email omar@farama.org \\
+       \addr Farama Foundation, Mila
+       \AND
+       \name Rodrigo Perez-Vicente \email rperezvicente@farama.org \\
+       \addr Farama Foundation
+       \AND
+       \name John U.~Balis \email balisujohn@gmail.com \\
+       \addr Farama Foundation, Mila
+       \AND
+       \name Alex Davey \email alex.davey@inria.fr \\
+       \addr Farama Foundation, INRIA
+       \AND
+       \name Will Dudley \email william.dudley19@imperial.ac.uk \\
+       \addr Farama Foundation
+       \AND
+       \name Jordan K.~Terry \email jkterry@farama.org \\
+       \addr Farama Foundation}
 
-% The \author macro works with any number of authors. There are two commands
-% used to separate the names and addresses of multiple authors: \And and \AND.
-%
-% Using \And between authors leaves it to LaTeX to determine where to break the
-% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
-% authors names on the first line, and the last on the second line, try using
-% \AND instead of \And before the third author name.
-
-\author{%
-  Omar G.~Younis \\
-  Farama Foundation, Mila \\
-  \And
-  Rodrigo Perez-Vicente \\
-  Farama Foundation \\
-  \And
-  John U.~Balis \\
-  Farama Foundation, Mila \\
-  \AND
-  Alex Davey \\
-  Farama Foundation, INRIA \\
-  \And
-  Will Dudley \\
-  Farama Foundation \\
-  \And
-  Jordan K.~Terry \\
-  Farama Foundation \\
-}
+\editor{TBD}
 
 \begin{document}
 
@@ -208,16 +205,17 @@ Offline reinforcement learning (RL) depends on shared datasets, but sharing them
 TorchRL, AgileRL, and d3rlpy already load Minari datasets natively, so switching datasets in those libraries takes one line of code. Minari also hosts \numdatasets reproducible datasets (\numtrajectories trajectories, \numsteps steps) covering robotic locomotion and manipulation, maze and grid navigation, language-conditioned instruction following, Atari, and web navigation, including a full regeneration of D4RL with public generation scripts. We report baseline scores for six offline RL algorithms on the regenerated D4RL and MuJoCo datasets.
 \end{abstract}
 
-% keywords can be removed
-\keywords{Reinforcement Learning \and Offline RL \and Datasets \and Benchmarks \and Open Source}
+\begin{keywords}
+  reinforcement learning, offline reinforcement learning, datasets, reproducibility, open-source software
+\end{keywords}
 
 \section{Introduction}
 
-Agents that learn from their own interaction data are an increasingly central part of AI research \cite{experience-era}. That data, the record of what an agent saw, did, and got in return, is expensive to collect and useful well beyond the project that produced it. Yet very little of it is shared in a form that others can reuse.
+Agents that learn from their own interaction data are an increasingly central part of AI research \citep{experience-era}. That data, the record of what an agent saw, did, and got in return, is expensive to collect and useful well beyond the project that produced it. Yet very little of it is shared in a form that others can reuse.
 
-Three problems get in the way. First, there is no common format. Each benchmark defines its own layout for observations, actions, and episode boundaries, so a loader written for one rarely works on another. Second, released datasets are usually frozen snapshots: the environment version, seeds, and wrappers used to generate them are not recorded, and once the simulator changes the data can no longer be regenerated or evaluated under matching conditions. D4RL \cite{d4rl}, the most widely used offline RL benchmark, is a case in point; its datasets depend on deprecated versions of MuJoCo and Gym. Third, combining data from several sources means reconciling spaces, metadata, and conventions by hand.
+Three problems get in the way. First, there is no common format. Each benchmark defines its own layout for observations, actions, and episode boundaries, so a loader written for one rarely works on another. Second, released datasets are usually frozen snapshots: the environment version, seeds, and wrappers used to generate them are not recorded, and once the simulator changes the data can no longer be regenerated or evaluated under matching conditions. D4RL \citep{d4rl}, the most widely used offline RL benchmark, is a case in point; its datasets depend on deprecated versions of MuJoCo and Gym. Third, combining data from several sources means reconciling spaces, metadata, and conventions by hand.
 
-Minari is our answer to these problems. It is an open-source library that defines a dataset format for sequential decision-making and the tools to create, share, and load data in that format. The API mirrors Gym and Gymnasium \cite{gym, gymnasium}, which most RL practitioners already use daily: Figure~\ref{fig:code} shows that recording a dataset takes a wrapper and one function call, and loading one takes a single line. Datasets are versioned and hosted on the HuggingFace Hub\footnote{\url{https://huggingface.co}}, and can be listed, downloaded, inspected, and combined from the command line or from Python. Section~\ref{sec:library_features} describes these features in detail.
+Minari is our answer to these problems. It is an open-source library that defines a dataset format for sequential decision-making and the tools to create, share, and load data in that format. The API mirrors Gym and Gymnasium \citep{gym, gymnasium}, which most RL practitioners already use daily: Figure~\ref{fig:code} shows that recording a dataset takes a wrapper and one function call, and loading one takes a single line. Datasets are versioned and hosted on the HuggingFace Hub\footnote{\url{https://huggingface.co}}, and can be listed, downloaded, inspected, and combined from the command line or from Python. Section~\ref{sec:library_features} describes these features in detail.
 
 We want Minari to do for RL datasets what Gymnasium did for environments: give the community one interface, so that a new dataset is usable by every compatible training library the day it is published.
 
@@ -227,7 +225,7 @@ We want Minari to do for RL datasets what Gymnasium did for environments: give t
     \item \textbf{A dataset format and library.} An environment-agnostic format for trajectory data with machine-readable metadata and a fixed naming scheme, implemented in a pip-installable library with a Python API and a command-line interface (Sect.~\ref{sec:library_features}).
     \item \textbf{Reproducibility by construction.} Each dataset records the environment specification, generation seeds, applied wrappers, and pinned package requirements, so the generating environment can be rebuilt and the data regenerated. Earlier offline RL benchmarks store none of this (Sect.~\ref{sec:repro}).
     \item \textbf{A dataset collection.} \numdatasets datasets (\numtrajectories trajectories, \numsteps steps) in six collections, each documented and released with its generation script. This includes a regeneration of D4RL on maintained versions of MuJoCo and Gymnasium (Sect.~\ref{sec:datasets}).
-    \item \textbf{Baselines.} Scores for six offline RL algorithms, run with CORL~\cite{corl}, on the regenerated D4RL and MuJoCo datasets (Sect.~\ref{sec:benchmarks}).
+    \item \textbf{Baselines.} Scores for six offline RL algorithms, run with CORL~\citep{corl}, on the regenerated D4RL and MuJoCo datasets (Sect.~\ref{sec:benchmarks}).
 \end{itemize}
 
 Minari is maintained by the Farama Foundation alongside Gymnasium, and TorchRL, AgileRL, and d3rlpy already load its datasets natively (Sect.~\ref{sec:integrations}).
@@ -263,10 +261,10 @@ Prior work falls into two groups: fixed benchmark releases (D4RL, RL Unplugged) 
      & \textbf{Standard} & \textbf{User-created} & \textbf{Repro-} & \textbf{Hub} & \textbf{Framework-} & \textbf{Domain} \\
      & \textbf{format} & \textbf{datasets} & \textbf{ducible} & \textbf{sharing} & \textbf{agnostic} & \textbf{scope} \\
     \midrule
-    D4RL \cite{d4rl}                 & \checkmark & --         & --         & --         & \checkmark & RL \\
-    RL Unplugged \cite{rlunplugged}  & \checkmark & --         & --         & --         & \checkmark & RL \\
-    RLDS \cite{rlds}                 & \checkmark & \checkmark & --         & partial    & TF only    & RL \\
-    LeRobot \cite{lerobot}           & \checkmark & \checkmark & partial    & \checkmark & PyTorch    & Robotics \\
+    D4RL \citep{d4rl}                 & \checkmark & --         & --         & --         & \checkmark & RL \\
+    RL Unplugged \citep{rlunplugged}  & \checkmark & --         & --         & --         & \checkmark & RL \\
+    RLDS \citep{rlds}                 & \checkmark & \checkmark & --         & partial    & TF only    & RL \\
+    LeRobot \citep{lerobot}           & \checkmark & \checkmark & partial    & \checkmark & PyTorch    & Robotics \\
     \textbf{Minari (ours)}           & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & General \\
     \bottomrule
     \end{tabular}%
@@ -275,13 +273,13 @@ Prior work falls into two groups: fixed benchmark releases (D4RL, RL Unplugged) 
     \label{tab:comparison}
 \end{table}
 
-\paragraph{RLDS} RLDS \cite{rlds} defines a schema for RL trajectories and a set of operations on them, built on TensorFlow Datasets. Minari's episode-level schema owes a lot to it. The catch is the dependency: using RLDS means bringing in TensorFlow, which most current RL code bases, written in PyTorch or JAX, do not otherwise need.
+\paragraph{RLDS} RLDS \citep{rlds} defines a schema for RL trajectories and a set of operations on them, built on TensorFlow Datasets. Minari's episode-level schema owes a lot to it. The catch is the dependency: using RLDS means bringing in TensorFlow, which most current RL code bases, written in PyTorch or JAX, do not otherwise need.
 
-\paragraph{D4RL} D4RL \cite{d4rl} made offline RL a benchmarkable problem, and most offline RL papers since report results on it. But its datasets were generated with specific, now-unmaintained versions of Gym and mujoco-py, and the generation settings were not stored with the data. As those dependencies age, the datasets become hard to load and impossible to regenerate exactly. D4RL also offers no way for users to create datasets of their own in the same format. Minari regenerates the D4RL tasks on maintained software (Sect.~\ref{sec:d4rl}) and gives users the same tools we used to do it.
+\paragraph{D4RL} D4RL \citep{d4rl} made offline RL a benchmarkable problem, and most offline RL papers since report results on it. But its datasets were generated with specific, now-unmaintained versions of Gym and mujoco-py, and the generation settings were not stored with the data. As those dependencies age, the datasets become hard to load and impossible to regenerate exactly. D4RL also offers no way for users to create datasets of their own in the same format. Minari regenerates the D4RL tasks on maintained software (Sect.~\ref{sec:d4rl}) and gives users the same tools we used to do it.
 
-\paragraph{RL Unplugged} RL Unplugged \cite{rlunplugged} provides offline datasets for the DeepMind Control Suite \cite{deepmindcontrolsuite}, Atari, and other domains, with more emphasis on hard exploration settings than D4RL. Like D4RL, it is a fixed release. It has no tooling for creating compatible datasets and records no information for regenerating the data.
+\paragraph{RL Unplugged} RL Unplugged \citep{rlunplugged} provides offline datasets for the DeepMind Control Suite \citep{deepmindcontrolsuite}, Atari, and other domains, with more emphasis on hard exploration settings than D4RL. Like D4RL, it is a fixed release. It has no tooling for creating compatible datasets and records no information for regenerating the data.
 
-\paragraph{LeRobot} LeRobot \cite{lerobot} provides models, datasets, and tools for real-world robot learning in PyTorch, with datasets hosted on the HuggingFace Hub. Its format is built around robot data, such as multi-camera video streams and joint states. Minari targets the general case: any Gymnasium space, any environment, simulated or not.
+\paragraph{LeRobot} LeRobot \citep{lerobot} provides models, datasets, and tools for real-world robot learning in PyTorch, with datasets hosted on the HuggingFace Hub. Its format is built around robot data, such as multi-camera video streams and joint states. Minari targets the general case: any Gymnasium space, any environment, simulated or not.
 
 \paragraph{HuggingFace Hub} The Hub hosts most publicly released models and datasets in machine learning and handles versioning, documentation, and access control. It has no notion of RL episodes, spaces, or environments. Minari uses the Hub as its storage backend and adds that structure on top.
 
@@ -289,13 +287,13 @@ Prior work falls into two groups: fixed benchmark releases (D4RL, RL Unplugged) 
 \label{sec:integrations}
 Three offline RL libraries load Minari datasets natively, so users can train on any Minari dataset without writing a data loader.
 
-\paragraph{TorchRL} TorchRL \cite{torchrl} is the PyTorch project's RL library, built from modular components for environments, replay buffers, losses, and agents. Minari datasets load directly into its replay buffers.
+\paragraph{TorchRL} TorchRL \citep{torchrl} is the PyTorch project's RL library, built from modular components for environments, replay buffers, losses, and agents. Minari datasets load directly into its replay buffers.
 
 \paragraph{AgileRL}
-AgileRL \cite{agilerl} uses evolutionary hyperparameter optimization and population-based training to tune agent architectures and hyperparameters during training, with the aim of reducing the tuning burden for practitioners.
+AgileRL \citep{agilerl} uses evolutionary hyperparameter optimization and population-based training to tune agent architectures and hyperparameters during training, with the aim of reducing the tuning burden for practitioners.
 
 \paragraph{d3rlpy}
-d3rlpy \cite{d3rlpy} is a PyTorch library of offline RL algorithms, including CQL \cite{CQL}, BCQ \cite{BCQ}, and TD3+BC \cite{TD3+BC}, with a short, scikit-learn-style API.
+d3rlpy \citep{d3rlpy} is a PyTorch library of offline RL algorithms, including CQL \citep{CQL}, BCQ \citep{BCQ}, and TD3+BC \citep{TD3+BC}, with a short, scikit-learn-style API.
 
 
 \section{Library features}
@@ -345,18 +343,18 @@ Minari is a pure Python package installable with \verb|pip install minari|. It c
 
 \paragraph{Loading and manipulating datasets.} Loaded datasets support episode sampling, iteration, filtering by any episode-level predicate, and shuffling. Several datasets with compatible spaces can be combined into one.
 
-\paragraph{Sharing datasets.} \verb|minari upload| publishes a dataset to the HuggingFace Hub and \verb|minari download| fetches it, along with its metadata, so another group can reproduce or extend an experiment from the dataset ID alone. One-off operations like these are also available from the command line without writing Python (Table~\ref{tab:cli}).
+\paragraph{Sharing datasets.} The \verb|minari upload| command publishes a dataset to the HuggingFace Hub, and \verb|minari download| fetches it, along with its metadata, so another group can reproduce or extend an experiment from the dataset ID alone. One-off operations like these are also available from the command line without writing Python (Table~\ref{tab:cli}).
 
 \subsection{Improving reproducibility in Offline RL}
 \label{sec:repro}
 
-RL results are notoriously hard to reproduce \cite{hendersonDeepReinforcementLearning2019}. Offline RL adds a failure mode of its own: a policy is trained on data from one environment and evaluated in another that is supposed to be identical but is not. A changed time limit, a missing wrapper, or a different simulator version is enough to make scores incomparable, and nothing in a bare array of transitions reveals the mismatch. Minari stores three things to prevent it.
+RL results are notoriously hard to reproduce \citep{hendersonDeepReinforcementLearning2019}. Offline RL adds a failure mode of its own: a policy is trained on data from one environment and evaluated in another that is supposed to be identical but is not. A changed time limit, a missing wrapper, or a different simulator version is enough to make scores incomparable, and nothing in a bare array of transitions reveals the mismatch. Minari stores three things to prevent it.
 
 \paragraph{Environment and wrappers.} \pythoninline{dataset.recover_environment()} rebuilds the environment that generated the data from its stored specification, including any wrappers that changed its behavior. Evaluation therefore runs on the same environment as data collection by default, not on whatever the current release of the environment happens to be. When the evaluation task should differ from the collection task, for example a goal-conditioned dataset collected with random goals but evaluated on a fixed one, the dataset can also store a separate evaluation environment, returned by \pythoninline{recover_environment(eval_env=True)}.
 
 \paragraph{Seeds.} When the user does not pass a seed to \verb|reset()|, the \verb|DataCollector| draws one and stores it with the episode. Rerunning the same policy (with its own randomness seeded) from the stored seeds regenerates the same episodes.
 
-\paragraph{Software versions.} Physics simulators such as MuJoCo~\cite{mujoco} integrate rigid-body dynamics numerically, so the same policy can produce different trajectories under different simulator versions. Dataset creators can pin pip requirements when creating a dataset, and Minari checks the installed packages against them when the environment is recovered.
+\paragraph{Software versions.} Physics simulators such as MuJoCo~\citep{mujoco} integrate rigid-body dynamics numerically, so the same policy can produce different trajectories under different simulator versions. Dataset creators can pin pip requirements when creating a dataset, and Minari checks the installed packages against them when the environment is recovered.
 
 \section{Available datasets}
 \label{sec:datasets}
@@ -428,16 +426,16 @@ relocate/cloned-v2           & 0.2   & 0.2     & 0.3    & 0.2   & 0.3   & 0.7   
 relocate/expert-v2           & 106.7 & 98.4    & 1.2    & 107.2 & 0.3   & 106.7 \\ \midrule
 \textit{relocate average}    & 36.1  & 32.9    & 0.6    & 36.2  & 0.3   & 36.0  \\ \bottomrule
 \end{tabular}
-\caption{Normalized scores on the regenerated D4RL navigation and manipulation datasets, using the CORL~\cite{corl} implementations. Each cell is the mean over 3 seeds of the best checkpoint, evaluated with each algorithm's CORL evaluation settings (10--100 episodes); italic rows are group averages. Scores are $100\,(R-R_{\min})/(R_{\max}-R_{\min})$ with the random and expert reference returns stored in each dataset's metadata, as in D4RL~\cite{d4rl}. Unlike D4RL's maze2d, \textsc{Point Maze} is goal-conditioned and uses different reference returns, so these rows are not comparable to published maze2d results.}
+\caption{Normalized scores on the regenerated D4RL navigation and manipulation datasets, using the CORL~\citep{corl} implementations. Each cell is the mean over 3 seeds of the best checkpoint, evaluated with each algorithm's CORL evaluation settings (10--100 episodes); italic rows are group averages. Scores are $100\,(R-R_{\min})/(R_{\max}-R_{\min})$ with the random and expert reference returns stored in each dataset's metadata, as in D4RL~\citep{d4rl}. Unlike D4RL's maze2d, \textsc{Point Maze} is goal-conditioned and uses different reference returns, so these rows are not comparable to published maze2d results.}
 \label{tab:benchmarks_d4rl}
 \end{table}
-D4RL \cite{d4rl} is still the default offline RL benchmark, but its datasets were generated with mujoco-py and versions of Gym that are no longer maintained. We regenerated its tasks on Gymnasium, Gymnasium-Robotics, and the official MuJoCo bindings, following the original data-generation procedures. The regenerated data is not bit-identical to the original, since the simulators and environment implementations changed. In exchange, every dataset can now be rebuilt from its stored seeds and script. The collection contains (Fig.~\ref{fig:dr4l}):
+D4RL \citep{d4rl} is still the default offline RL benchmark, but its datasets were generated with mujoco-py and versions of Gym that are no longer maintained. We regenerated its tasks on Gymnasium, Gymnasium-Robotics, and the official MuJoCo bindings, following the original data-generation procedures. The regenerated data is not bit-identical to the original, since the simulators and environment implementations changed. In exchange, every dataset can now be rebuilt from its stored seeds and script. The collection contains (Fig.~\ref{fig:dr4l}):
 \begin{itemize}
     \item \textbf{Ant Maze} (6 datasets). An 8-DoF quadruped follows waypoints from a Q-value iteration planner through mazes of three sizes, with a success rate above 80\%.
     \item \textbf{Point Maze} (8 datasets). A force-actuated ball moves to random goals, driven by a Q-value iteration planner and a PD controller, in 4 mazes with sparse and dense rewards.
     \item \textbf{Adroit} (12 datasets). A 24-DoF simulated hand performs four dexterous tasks from \citet{d4rl-pen}: rotating a pen to a target orientation, opening a door, hammering a nail, and relocating a ball. As in D4RL, each task has three datasets: the original human demonstrations, rollouts of a trained RL expert (\textit{expert}), and rollouts of a policy trained by imitation on a mix of the two (\textit{cloned}).
     \item \textbf{Kitchen} (3 datasets). A Franka arm manipulates kitchen objects, using data from \citet{relaypolicylearning}. The target is four subtasks: open the microwave, move the kettle, flip the light switch, and slide open the cabinet. Following D4RL, \textit{complete} contains all four in sequence, \textit{mixed} completes them alongside other subtasks, and \textit{partial} never completes all four.
-    \item \textbf{Minigrid Four Rooms} (2 datasets). A grid agent navigates to a goal in the Minigrid \cite{minigrid} four-rooms layout, under a random policy and an optimal value-iteration policy.
+    \item \textbf{Minigrid Four Rooms} (2 datasets). A grid agent navigates to a goal in the Minigrid \citep{minigrid} four-rooms layout, under a random policy and an optimal value-iteration policy.
 \end{itemize}
 
 \subsection{MuJoCo}
@@ -470,10 +468,10 @@ walker2d/medium-v0           & 91.0  & 91.5    & 91.5   & 91.2  & 91.8  & 91.5  
 walker2d/expert-v0           & 101.9 & 102.1   & 101.4  & 29.4  & 100.3 & 102.3 \\ \midrule
 \textit{walker2d average}    & 85.0  & 85.3    & 85.6   & 60.9  & 84.7  & 86.1  \\ \bottomrule
 \end{tabular}
-\caption{Normalized scores on the Minari MuJoCo locomotion datasets, using the CORL~\cite{corl} implementations. Each cell is the mean over 3 seeds of the best checkpoint over $10^6$ gradient steps, evaluated for 10 episodes; italic rows average the three skill tiers. $R_{\min}$ is the mean return of a random policy (50 episodes) and $R_{\max}$ the mean return of the corresponding \textit{expert} dataset. Minari's SAC/TQC experts are stronger than D4RL's reference experts ($1.34\times$ on \textsc{HalfCheetah}, $1.49\times$ on \textsc{Walker2d}), so a score of 100 here means a higher return than in D4RL and the two are not directly comparable.}
+\caption{Normalized scores on the Minari MuJoCo locomotion datasets, using the CORL~\citep{corl} implementations. Each cell is the mean over 3 seeds of the best checkpoint over $10^6$ gradient steps, evaluated for 10 episodes; italic rows average the three skill tiers. $R_{\min}$ is the mean return of a random policy (50 episodes) and $R_{\max}$ the mean return of the corresponding \textit{expert} dataset. Minari's SAC/TQC experts are stronger than D4RL's reference experts ($1.34\times$ on \textsc{HalfCheetah}, $1.49\times$ on \textsc{Walker2d}), so a score of 100 here means a higher return than in D4RL and the two are not directly comparable.}
 \label{tab:benchmarks_mujoco}
 \end{table}
-The MuJoCo collection covers every MuJoCo \cite{mujoco} environment in Gymnasium \cite{andreasthesis}, on current environment versions (Fig.~\ref{fig:mujoco}). Unlike the D4RL locomotion datasets, it is not a regeneration of an earlier release. We trained agents with Stable Baselines3 \cite{sb3}, using SAC \cite{sac} everywhere except \textsc{Humanoid}, where we used TQC \cite{tqc}. Checkpoints saved at different performance plateaus give datasets at several skill levels, since offline RL methods are expected to work from suboptimal data as well as from experts.
+The MuJoCo collection covers every MuJoCo \citep{mujoco} environment in Gymnasium \citep{andreasthesis}, on current environment versions (Fig.~\ref{fig:mujoco}). Unlike the D4RL locomotion datasets, it is not a regeneration of an earlier release. We trained agents with Stable Baselines3 \citep{sb3}, using SAC \citep{sac} everywhere except \textsc{Humanoid}, where we used TQC \citep{tqc}. Checkpoints saved at different performance plateaus give datasets at several skill levels, since offline RL methods are expected to work from suboptimal data as well as from experts.
 
 The balancing tasks (\textsc{InvertedPendulum}, \textsc{InvertedDoublePendulum}) have an expert dataset, which never drops the pole, and a medium one, which keeps it up for about 100 steps. The arm tasks (\textsc{Reacher}, \textsc{Pusher}) and \textsc{Swimmer} also have expert and medium datasets. The planar locomotion tasks (\textsc{HalfCheetah}, \textsc{Hopper}, \textsc{Walker2d}) add a third, \textit{simple}, tier below medium. So do \textsc{Ant}, whose expert gallops fast but sometimes falls, while the medium agent walks quickly and stably and the simple one moves slowly; and \textsc{Humanoid}, which ranges from running (expert) to brisk walking (medium) to a slow sliding gait (simple).
 
@@ -487,7 +485,7 @@ The balancing tasks (\textsc{InvertedPendulum}, \textsc{InvertedDoublePendulum})
     \caption{BabyAI datasets: \textsc{GoToRedBall}, \textsc{KeyCorridor} (two variants), and \textsc{MoveTwoAcross} tasks (left to right).}
     \label{fig:babyai}
 \end{figure}
-BabyAI \cite{babyai} is a set of grid-world tasks for grounded language learning. In each episode the agent receives a natural-language instruction, such as ``put the red ball next to the blue box'', and must carry it out from partial observations. Tasks range from going to a single object to long instructions that chain several subgoals.
+BabyAI \citep{babyai} is a set of grid-world tasks for grounded language learning. In each episode the agent receives a natural-language instruction, such as ``put the red ball next to the blue box'', and must carry it out from partial observations. Tasks range from going to a single object to long instructions that chain several subgoals.
 
 We generated 170 datasets covering every BabyAI level (Fig.~\ref{fig:babyai}), from \textsc{GoToRedBall} up to \textsc{BossLevel}. Each level has two versions: one with the standard agent-centric partial view and one with the full grid as observation, so the same task can be studied with and without partial observability. Trajectories come from the BabyAI bot, a deterministic expert that solves every level, and each dataset holds 1,000 episodes. Because the instruction is part of the observation (a \verb|Text| space inside a \verb|Dict|), these datasets also exercise Minari's support for structured, non-numeric observations.
 
@@ -503,23 +501,23 @@ We generated 170 datasets covering every BabyAI level (Fig.~\ref{fig:babyai}), f
     \caption{ALE datasets: \textsc{Breakout}, \textsc{Space Invaders}, \textsc{Boxing}, \textsc{Ms PacMan} and \textsc{Montezuma's Revenge} environments (left to right).}
     \label{fig:atari}
 \end{figure}
-We recorded 10 episodes in each of the 57 Atari 2600 games of the Arcade Learning Environment \cite{ALE} (Fig.~\ref{fig:atari}), using pretrained CleanRL \cite{cleanrl} agents trained with PPO \cite{ppo} and an IMPALA network \cite{impala}. The agents act on the usual preprocessed input (grayscale, resized, frame-stacked), but the datasets store the raw RGB frames, so users can choose their own preprocessing. The games range from shooters (\textsc{Space Invaders}) and maze games (\textsc{Ms. Pac-Man}) to sports (\textsc{Boxing}) and hard-exploration games (\textsc{Montezuma's Revenge}). This collection is where Minari's optional JPEG encoding of pixel observations matters most for storage and download size.
+We recorded 10 episodes in each of the 57 Atari 2600 games of the Arcade Learning Environment \citep{ALE} (Fig.~\ref{fig:atari}), using pretrained CleanRL \citep{cleanrl} agents trained with PPO \citep{ppo} and an IMPALA network \citep{impala}. The agents act on the usual preprocessed input (grayscale, resized, frame-stacked), but the datasets store the raw RGB frames, so users can choose their own preprocessing. The games range from shooters (\textsc{Space Invaders}) and maze games (\textsc{Ms. Pac-Man}) to sports (\textsc{Boxing}) and hard-exploration games (\textsc{Montezuma's Revenge}). This collection is where Minari's optional JPEG encoding of pixel observations matters most for storage and download size.
 
 \subsection{MetaWorld}
-MetaWorld \cite{metaworld} has 50 manipulation tasks for a simulated Sawyer arm, built for multi-task and meta-RL: reaching, pushing, pick-and-place, tool use, opening doors and drawers, pressing buttons, and more. We recorded 50 episodes per task with the scripted expert policies that ship with MetaWorld, which solve nearly every episode. Observations are the full state: hand position, gripper opening, object poses, and goal position. The Adroit datasets offer few tasks with a high-dimensional hand; MetaWorld offers many tasks with a simple gripper and binary success signals, which suits multi-task offline RL and studies of transfer between tasks.
+MetaWorld \citep{metaworld} has 50 manipulation tasks for a simulated Sawyer arm, built for multi-task and meta-RL: reaching, pushing, pick-and-place, tool use, opening doors and drawers, pressing buttons, and more. We recorded 50 episodes per task with the scripted expert policies that ship with MetaWorld, which solve nearly every episode. Observations are the full state: hand position, gripper opening, object poses, and goal position. The Adroit datasets offer few tasks with a high-dimensional hand; MetaWorld offers many tasks with a simple gripper and binary success signals, which suits multi-task offline RL and studies of transfer between tasks.
 
 
 \subsection{WebAgents}
 \label{sec:webagents}
-We converted WebLINX \cite{weblinx} to the Minari format. It contains 969 successful demonstrations of web navigation tasks, about 24K interaction steps in total, covering form filling, information lookup, and multi-step workflows on real websites. Observations and actions are text and there is no reward. We include it to show that the format is not limited to simulated control: any sequential decision-making data that fits Gymnasium spaces fits in Minari, including data for training language-model agents.
+We converted WebLINX \citep{weblinx} to the Minari format. It contains 969 successful demonstrations of web navigation tasks, about 24K interaction steps in total, covering form filling, information lookup, and multi-step workflows on real websites. Observations and actions are text and there is no reward. We include it to show that the format is not limited to simulated control: any sequential decision-making data that fits Gymnasium spaces fits in Minari, including data for training language-model agents.
 
 
 \section{Benchmarks}
 \label{sec:benchmarks}
 
-Minari is infrastructure, and benchmarking algorithms is better left to the training libraries built on it (Sect.~\ref{sec:integrations}). Still, a regenerated dataset is only useful if standard algorithms learn from it, so we checked. We trained six offline RL algorithms, BC, BC-10\%, TD3+BC~\cite{TD3+BC}, AWAC, CQL~\cite{CQL}, and IQL, on the regenerated D4RL datasets and on the MuJoCo collection, using the CORL~\cite{corl} implementations and their tuned hyperparameters unchanged. Tables~\ref{tab:benchmarks_d4rl} and~\ref{tab:benchmarks_mujoco} report normalized scores.
+Minari is infrastructure, and benchmarking algorithms is better left to the training libraries built on it (Sect.~\ref{sec:integrations}). Still, a regenerated dataset is only useful if standard algorithms learn from it, so we checked. We trained six offline RL algorithms, BC, BC-10\%, TD3+BC~\citep{TD3+BC}, AWAC, CQL~\citep{CQL}, and IQL, on the regenerated D4RL datasets and on the MuJoCo collection, using the CORL~\citep{corl} implementations and their tuned hyperparameters unchanged. Tables~\ref{tab:benchmarks_d4rl} and~\ref{tab:benchmarks_mujoco} report normalized scores.
 
-We report the best checkpoint over training, not the last. Off-policy actor-critic methods, TD3+BC, AWAC, and CQL in particular, can diverge late in training on narrow datasets, and the final checkpoint then understates what the method reached. CORL reports both for the same reason~\cite{corl}. Best-checkpoint scores are optimistic, so they should be compared with CORL's best-checkpoint numbers and not with last-checkpoint results from the original papers.
+We report the best checkpoint over training, not the last. Off-policy actor-critic methods, TD3+BC, AWAC, and CQL in particular, can diverge late in training on narrow datasets, and the final checkpoint then understates what the method reached. CORL reports both for the same reason~\citep{corl}. Best-checkpoint scores are optimistic, so they should be compared with CORL's best-checkpoint numbers and not with last-checkpoint results from the original papers.
 
 \paragraph{What the results show.} The regenerated D4RL datasets keep the difficulty structure of the originals. Expert Adroit data is easy for imitation-style methods (BC, AWAC, and IQL all exceed 100 on every expert dataset), while the human and cloned datasets for \textit{door}, \textit{hammer}, and \textit{relocate} stay hard, with no method above 27.6. IQL is the most consistent method across both tables and lands close to CORL's published scores where a direct comparison exists (87.7 vs.\ 87.5 on \textit{antmaze/umaze}, 106.1 vs.\ 106.7 on \textit{door/expert}). Two departures from published results are worth stating plainly. First, BC and AWAC score higher on the regenerated Ant Maze datasets than on the originals, especially on the large mazes. The regenerated data comes from a different maze implementation and planner rollouts, so exact agreement is not expected, but users comparing against older Ant Maze numbers should be aware of the gap. Second, CQL trails the other methods on Ant Maze and collapses on \textit{hammer} and \textit{relocate}, and TD3+BC fails on \textit{door} and \textit{relocate}. CQL's Ant Maze results are known to be hard to reproduce, and in CORL's configuration it is the only one of the six methods trained without state normalization. We report CORL's settings as-is and have not tuned them for the new datasets.
 
@@ -538,14 +536,8 @@ Minari has limits. It stores data as episodes and reads it in batches of episode
 
 The collection is meant to grow through contributions. Any group that records data with Minari can publish it on the Hub, and every compatible training library can use it right away.
 
-\section*{Acknowledgments}
-We acknowledge every contributor, please find the complete list here: \url{https://github.com/Farama-Foundation/Minari/graphs/contributors}
-
-\bibliographystyle{plainnat}
-\bibliography{refs}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\acks{We thank every contributor to Minari; the full list is at \url{https://github.com/Farama-Foundation/Minari/graphs/contributors}. % TODO: disclose funding and competing interests from the past 36 months, as JMLR requires.
+}
 
 \appendix
 
@@ -557,7 +549,8 @@ Metadata can be attached to a dataset and to each of its episodes. Table~\ref{ta
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{lll}
+    \small
+    \begin{tabular}{@{}llp{0.5\linewidth}@{}}
     \toprule
         Attribute & Type & Description \\ \midrule
         \pythoninline{dataset_id} & \pythoninline{str} & Identifier of the Minari dataset. \\
@@ -601,7 +594,7 @@ Observations and actions can use any of the following Gymnasium spaces, nested a
 
 \section{Episode data structure}
 
-A loaded dataset is a \pythoninline{MinariDataset}, which supports iterating over and sampling episodes. Each episode is returned as an \pythoninline{EpisodeData} object. For example, the following loads \pythoninline{D4RL/door/human-v2} and samples 10 episodes at random:
+A loaded dataset is a \pythoninline{MinariDataset}, which supports iterating over and sampling episodes. Each episode is returned as an \pythoninline{EpisodeData} object. For example, the following code samples 10 episodes at random from \pythoninline{D4RL/door/human-v2}:
 
 \begin{python}
 import minari
@@ -613,7 +606,8 @@ sampled_episodes = dataset.sample_episodes(10)
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{lll}
+    \small
+    \begin{tabular}{@{}llp{0.45\linewidth}@{}}
     \toprule
         Field & Type & Description \\ \midrule
         \pythoninline{id} & \pythoninline{int} & ID of the episode. \\
@@ -628,5 +622,7 @@ sampled_episodes = dataset.sample_episodes(10)
 
 The types of \pythoninline{observations} and \pythoninline{actions} depend on the corresponding spaces.
 
+\vskip 0.2in
+\bibliography{refs}
 
 \end{document}
